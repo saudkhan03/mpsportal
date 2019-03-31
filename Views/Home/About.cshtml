@@ -1,0 +1,11 @@
+﻿@{
+    ViewData["Title"] = "About";
+}
+<h2>@ViewData["Title"]</h2>
+<h3>@ViewData["Message"]</h3>
+
+<p>Use this area to provide additional information.</p>
+<form action="Send" method="post" name="frmsend">
+    <input type="email" name="email" id="email" />
+    <input class="btn btn-info" type="submit" value="Send mail"></input>
+</form>

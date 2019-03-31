@@ -1,0 +1,507 @@
+﻿@{
+    ViewData["Title"] = "Home Page";
+}
+
+<style>
+    .button-container-mps {
+        padding-top: 6px;
+        cursor: default;
+    }
+
+        .button-container-mps > .row {
+            border: 1px solid #FFF;
+            padding-bottom: 3px;
+        }
+
+        .button-container-mps:hover {
+            border: 1px solid #9eceea;
+            
+        }
+</style>
+<div id="getUserDetailsUrl" style="display:none" data-request-url="@Url.Action("getUserDetails", "Home")"></div>
+<div id="getStudentDetailsUrl" style="display:none" data-request-url="@Url.Action("getStudentDetails", "Home")"></div>
+<div class="container" >
+    <div class="row">
+        <div class="col-md-offset-1 col-md-10">
+            <div class="panel panel-info" style="border: 1px solid #63b2da">
+                <div class="panel-heading" id="pnlHead" ></div>
+                <div class="panel-body">
+                    <div class="row">
+                        <div class="col-md-6 ">
+                            <div id="div1" class="infobox"></div>
+                        </div>
+                        <div class="col-md-6">
+                            <div id="div2" class="infobox"></div>
+                        </div>
+                    </div>
+                    <!-- <div class="row">
+                        <div class="col-md-offset-1 col-md-4 ">
+                            <div id="detail1"></div>
+                        </div>
+                        <div class="col-md-offset-1 col-md-4" >
+                            <div id="detail2"></div>
+                        </div>
+                    </div> -->
+                    <div class="row">
+                        <div class="col-md-12 text-center">
+                            <i class="fa fa-spinner fa-spin " style="font-size:24px"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="panel js-student" style="border: 1px solid #DDD;display:none">
+                <div class="panel-heading" style="background:#9eceea"></div>
+                <div class="panel-body">
+                    <div class="row">
+                        <div class="col-md-12 text-center" id="indexMarks" >
+                            
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12 text-center">
+                            <i class="fa fa-spinner fa-spin js-loadStudent" style="font-size:24px"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="panel panel-success" style="display:none">
+                <div class="panel-heading">Administration</div>
+                <div class="panel-body">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="row">
+                                <div class="col-md-4 button-container-mps">
+                                    <div class="row">
+                                        <div class="col-md-12 text-center ">
+                                            <div class="btn-group">
+                                                <button type="button" class="btn btn-default dropdown-toggle"
+                                                        data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                                    <i class="fa fa-user"></i>  Students <span class="caret"></span>
+                                                </button>
+                                                <ul class="dropdown-menu">
+                                                    <li>@Html.ActionLink("Add Students", "Students", "Admin")</li>
+                                                    <li>@Html.ActionLink("Edit/Update Students", "EditStudent", "Admin")</li>
+                                                    @*<li><a href="#">Edit student Slabs</a></li>
+                                                    <li
+                                                        role="separator" class="divider"></li>
+                                                        <li><a href="#">Separated link</a></li>*@
+                                                </ul>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <ul class="nav nav-default">
+                                                <li>
+                                                    <small>
+                                                        <strong>Add:</strong> create new student with all details
+                                                        including what slab he/she belongs to
+                                                    </small>
+                                                </li>
+                                                <li>
+                                                    <small>
+                                                        <strong>Edit:</strong> Modify student details by selecting a
+                                                        student from a list; modify all details including slab details for each
+                                                        student for the current academic year.
+                                                    </small>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-4 button-container-mps">
+                                    <div class="row">
+                                        <div class="col-md-12 text-center">
+                                            <div class="btn-group">
+                                                <button type="button" class="btn btn-default dropdown-toggle"
+                                                        data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                                    <i class="fa fa-user-plus"></i>  Staff/Teachers <span class="caret"></span>
+                                                </button>
+                                                <ul class="dropdown-menu">
+                                                    <li>@Html.ActionLink("Add Staff/Teachers", "Staff", "Admin")</li>
+                                                    <li>@Html.ActionLink("Edit/Update Staff/Teachers","EditStaff","Admin")</li>
+                                                </ul>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <ul class="nav nav-default">
+                                                <li>
+                                                    <small>
+                                                        <strong>Add:</strong> create new Staff/Teacher with all
+                                                        details
+                                                    </small>
+                                                </li>
+                                                <li>
+                                                    <small>
+                                                        <strong>Edit:</strong> modify Staff/Teacher details by
+                                                        selecting a from a list
+                                                    </small>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-4 button-container-mps">
+                                    <div class="row">
+                                        <div class="col-md-12 text-center">
+                                            <div class="btn-group">
+                                                <button type="button" class="btn btn-default dropdown-toggle"
+                                                        data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                                    <i class="fa fa-inr"></i>  Expense <span class="caret"></span>
+                                                </button>
+                                                <ul class="dropdown-menu">
+                                                    <li>@Html.ActionLink("Add/Edit Expense headers","Expense","Admin")</li>
+                                                    <li>@Html.ActionLink("Edit Student Slabs","Slabs","Admin")</li>
+                                                    <li>@Html.ActionLink("Add/Edit Salary Deductions","Deductions","Admin")</li>
+                                                </ul>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <ul class="nav nav-default">
+                                                <li>
+                                                    <small>
+                                                        <strong>Add/Edit expense headers:</strong> modify a pre-existing
+                                                        list of expense headers that will be used in the expense module while
+                                                        adding expenses
+                                                    </small>
+                                                </li>
+                                                <li>
+                                                    <small>
+                                                        <strong>Edit Salbs:</strong> modify individual slab details
+                                                        for students; this allows to modify the fees for each slab
+                                                    </small>
+                                                </li>
+                                                <li>
+                                                    <small>
+                                                        <strong>Add/Edit Salary Deductions:</strong> modify Deduction details for staff salaries
+                                                    </small>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="panel panel-danger" style="display:none">
+                <div class="panel-heading">Expense</div>
+                <div class="panel-body">
+                    <div class="row">
+                        <div class=" col-md-12">
+                            <div class="row">
+                                <div class="col-md-4 button-container-mps">
+                                    <div class="row">
+                                        <div class="col-md-12 text-center">
+                                            <div class="btn-group">
+                                                <button type="button" class="btn btn-default dropdown-toggle"
+                                                        data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                                    <i class="fa fa-inr"></i>  General Expense <span class="caret"></span>
+                                                </button>
+                                                <ul class="dropdown-menu">
+                                                    <li>@Html.ActionLink("Add Expense ","Expense","Expense")</li>
+                                                    <li>@Html.ActionLink("Edit Expense","EditExpense","Expense")</li>
+                                                </ul>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <ul class="nav nav-default">
+                                                <li>
+                                                    Manage school expenses by adding, editing payments defined by the
+                                                    expense headers set in the admin module
+                                                </li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-4 button-container-mps">
+                                    <div class="row">
+                                        <div class="col-md-12 text-center">
+                                            <a class="btn
+btn-default" href="Expense/Student"><i class="fa fa-user"></i> Student Fees
+                                            </a>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <ul class="nav nav-default">
+                                                <li>
+                                                    Manage the fees for students. Add, Modify Fees and generate bill
+                                                    instantly
+                                                </li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-4 button-container-mps">
+                                    <div class="row">
+                                        <div class="col-md-12 text-center">
+                                            <a class="btn
+btn-default" href="Expense/Staff"><i class="fa fa-user-plus"></i> Staff Salary
+                                            </a>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <ul class="nav nav-default">
+                                                <li>
+                                                    Manage the salary for staff. Add, Modify Salary and generate Pay slips
+                                                </li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="panel panel-info" style="display:none">
+                <div class="panel-heading">Reporting</div>
+                <div class="panel-body">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="row">
+                                <div class="col-md-4 button-container-mps">
+                                    <div class="row">
+                                        <div class="col-md-12 text-center ">
+                                            <div class="btn-group">
+                                                <button type="button" class="btn btn-default dropdown-toggle"
+                                                        data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                                    <i class="fa fa-user"></i> Students <span class="caret"></span>
+                                                </button>
+                                                <ul class="dropdown-menu">
+                                                    <li><a href="Reports/Students">Students details</a></li>
+                                                    <li><a href="Reports/StudentFee">Students fee details</a></li>
+                                                    @*<li
+                                                        role="separator" class="divider"></li>
+                                                        <li><a href="#">Separated link</a></li>*@
+                                                </ul>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <ul class="nav nav-default">
+                                                <li>
+                                                    <small>
+                                                        <strong>Details:</strong> Generate report with the complete
+                                                        student details, also export to excel.
+                                                    </small>
+                                                </li>
+                                                <li>
+                                                    <small>
+                                                        <strong>Fee details:</strong> Generate report with the
+                                                        complete fees details for all students, also export to excel.
+                                                    </small>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-4 button-container-mps">
+                                    <div class="row">
+                                        <div class="col-md-12 text-center">
+                                            <div class="btn-group">
+                                                <button type="button" class="btn btn-default dropdown-toggle"
+                                                        data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                                    <i class="fa fa-user-plus"></i> Staff/Teachers <span class="caret"></span>
+                                                </button>
+                                                <ul class="dropdown-menu">
+                                                    <li><a href="Reports/Staff">Staff/Teachers details</a></li>
+                                                    <li><a href="Reports/StaffSalary">Staff/Teachers payment details</a></li>
+                                                </ul>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <ul class="nav nav-default">
+                                                <li>
+                                                    <small>
+                                                        <strong>Details:</strong> create new Staff/Teacher with all
+                                                        details
+                                                    </small>
+                                                </li>
+                                                <li>
+                                                    <small>
+                                                        <strong>Payment details:</strong> modify Staff/Teacher
+                                                        details by selecting a from a list
+                                                    </small>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-4 button-container-mps">
+                                    <div class="row">
+                                        <div class="col-md-12 text-center">
+                                            <div class="btn-group">
+                                                <button type="button" class="btn btn-default dropdown-toggle"
+                                                        data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                                    <i class="fa fa-inr"></i> Expense <span class="caret"></span>
+                                                </button>
+                                                <ul class="dropdown-menu">
+                                                    <li><a href="Reports/Expense">All expense report</a></li>
+                                                </ul>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <ul class="nav nav-default">
+                                                <li>
+                                                    <small>
+                                                        <strong>Expense report:</strong> Generate report for all
+                                                        expenses
+                                                    </small>
+                                                </li>
+                                                <li>
+                                                    <small>
+                                                        <strong>Edit Salbs:</strong> modify individual slab details
+                                                        for students; this allows to modify the fees for each slab
+                                                    </small>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- <div class="panel panel-info">
+                <div class="panel-heading">Billing</div>
+                <div class="panel-body">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="row">
+                                <div class="col-md-4 button-container-mps">
+                                    <div class="row">
+                                        <div class="col-md-12 text-center ">
+                                            <div class="btn-group">
+                                                <button type="button" class="btn btn-default dropdown-toggle"
+                                                        data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                                    <i class="fa fa-user"></i> Students <span class="caret"></span>
+                                                </button>
+                                                <ul class="dropdown-menu">
+                                                    <li><a href="#">Students details</a></li>
+                                                    <li><a href="#">Students fee details</a></li>
+                                                    @*<li
+                                                        role="separator" class="divider"></li>
+                                                        <li><a href="#">Separated link</a></li>*@
+                                                </ul>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <ul class="nav nav-default">
+                                                <li>
+                                                    <small>
+                                                        <strong>Details:</strong> Generate report with the complete
+                                                        student details, also export to excel.
+                                                    </small>
+                                                </li>
+                                                <li>
+                                                    <small>
+                                                        <strong>Fee details:</strong> Generate report with the
+                                                        complete fees details for all students, also export to excel.
+                                                    </small>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-4 button-container-mps">
+                                    <div class="row">
+                                        <div class="col-md-12 text-center">
+                                            <div class="btn-group">
+                                                <button type="button" class="btn btn-default dropdown-toggle"
+                                                        data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                                    <i class="fa fa-user-plus"></i> Staff/Teachers <span class="caret"></span>
+                                                </button>
+                                                <ul class="dropdown-menu">
+                                                    <li><a href="#">Staff/Teachers details</a></li>
+                                                    <li><a href="#">Staff/Teachers payment details</a></li>
+                                                </ul>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <ul class="nav nav-default">
+                                                <li>
+                                                    <small>
+                                                        <strong>Details:</strong> create new Staff/Teacher with all
+                                                        details
+                                                    </small>
+                                                </li>
+                                                <li>
+                                                    <small>
+                                                        <strong>Payment details:</strong> modify Staff/Teacher
+                                                        details by selecting a from a list
+                                                    </small>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-4 button-container-mps">
+                                    <div class="row">
+                                        <div class="col-md-12 text-center">
+                                            <div class="btn-group">
+                                                <button type="button" class="btn btn-default dropdown-toggle"
+                                                        data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                                    <i class="fa fa-inr"></i> Expense<span class="caret"></span>
+                                                </button>
+                                                <ul class="dropdown-menu">
+                                                    <li><a href="#">All expense report</a></li>
+                                                </ul>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <ul class="nav nav-default">
+                                                <li>
+                                                    <small>
+                                                        <strong>Expense report:</strong> Generate report for all
+                                                        expenses
+                                                    </small>
+                                                </li>
+                                                <li>
+                                                    <small>
+                                                        <strong>Edit Salbs:</strong> modify individual slab details
+                                                        for students; this allows to modify the fees for each slab
+                                                    </small>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div> -->
+        </div>
+    </div>
+</div>
+@section scripts{
+    <environment include="Development">
+        <script src="~/js/jquery.home.js"></script>
+    </environment>
+    <environment exclude="Development">
+        <script src="/minjs/jquery.home.js"></script>
+    </environment>
+}

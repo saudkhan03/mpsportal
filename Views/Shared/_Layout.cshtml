@@ -1,0 +1,246 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - portal.mps</title>
+
+    <environment include="Development">
+        <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.css" />
+        <link rel="stylesheet" href="~/css/site.css" />
+        <link rel="stylesheet" href="~/lib/font-awesome/css/font-awesome.css" />
+    </environment>
+    <environment exclude="Development">
+        <link rel="stylesheet" href="https://ajax.aspnetcdn.com/ajax/bootstrap/3.3.7/css/bootstrap.min.css"
+              asp-fallback-href="~/lib/bootstrap/dist/css/bootstrap.min.css"
+              asp-fallback-test-class="sr-only" asp-fallback-test-property="position" asp-fallback-test-value="absolute" />
+        <link rel="stylesheet" href="~/css/site.min.css" asp-append-version="true" />
+        <link rel="stylesheet" href="~/lib/font-awesome/css/font-awesome.min.css" />
+    </environment>
+</head>
+<body>
+    <nav class="navbar navbar-default navbar-fixed-top">
+        <div class="container">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a asp-area="" asp-controller="Home" asp-action="Index" class="navbar-brand"><img src="/images/logo_t.png" style="width: 60%;margin-top: -10px; " /></a>
+            </div>
+            <div class="navbar-collapse collapse" >
+                <ul class="nav navbar-nav">
+                    <!--<li><a asp-area="" asp-controller="Home" asp-action="About">About</a></li>
+                    <li><a asp-area="" asp-controller="Home" asp-action="Contact">Contact</a></li> -->
+                    <li class="dropdown">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Expense<span class="caret"></span></a>
+                    <ul class="dropdown-menu">
+                        <li class="dropdown dropdown-submenu"><a href="#" class="dropdown-toggle" data-toggle="dropdown">General Expense</a>
+                        <ul class="dropdown-menu">
+                            <li>@Html.ActionLink("Add Expense","Expense","Expense")</li>
+                            <li>@Html.ActionLink("Edit/Update Expense","EditExpense","Expense")</li>
+                        </ul>
+                        </li>
+                        <li>@Html.ActionLink("Student Fees","Student","Expense")</li>
+                        <li>@Html.ActionLink("Staff Salary","Staff","Expense")</li>
+                    </ul>
+                    </li>
+                    <li class="dropdown">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Admin<span class="caret"></span></a>
+                    <ul class="dropdown-menu">
+                        <li class="dropdown dropdown-submenu"><a href="#" class="dropdown-toggle" data-toggle="dropdown">Student</a>
+                        <ul class="dropdown-menu">
+                            <li>@Html.ActionLink("Add Students","Students","Admin")</li>
+                            <li>@Html.ActionLink("Edit/Update Students","EditStudent","Admin")</li>
+                        </ul>
+                        </li>
+                        <li class="divider"></li>
+                        <li class="dropdown dropdown-submenu"><a href="#" class="dropdown-toggle" data-toggle="dropdown">Teachers/Staff</a>
+                        <ul class="dropdown-menu">
+                            <li>@Html.ActionLink("Add Staff/Teachers","Staff","Admin")</li>
+                            <li>@Html.ActionLink("Edit/Update Staff/Teachers","EditStaff","Admin")</li>
+                        </ul>
+                        </li>
+                        <li class="divider"></li>
+                        <li class="dropdown dropdown-submenu"><a href="#" class="dropdown-toggle" data-toggle="dropdown">Expense</a>
+                        <ul class="dropdown-menu">
+                            <li>@Html.ActionLink("Add/Edit Expense headers","Expense","Admin")</li>
+                            <li>@Html.ActionLink("Edit Student Slabs","Slabs","Admin")</li>
+                            <li>@Html.ActionLink("Add/Edit Salary Deductions","Deductions","Admin")</li>
+                        </ul>
+                        </li>
+                        <li class="divider"></li>
+                        <li class="dropdown dropdown-submenu"><a href="#" class="dropdown-toggle" data-toggle="dropdown">Other actions</a>
+                        <ul class="dropdown-menu">
+                            <li>@Html.ActionLink("Change password","ChangePassword","Admin")</li>
+                            <li>@Html.ActionLink("Send Mails(s)","SendMail","Admin")</li>
+                            <li>@Html.ActionLink("Send Text Msg(s)","SendText","Admin")</li>
+                        </ul>
+                        </li>
+                    </ul>
+                    </li>
+                    <li class="dropdown">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Students<span class="caret"></span></a>
+                    <ul class="dropdown-menu">
+                        <li>@Html.ActionLink("Subjects","Subjects","Students")</li>
+                        <li>@Html.ActionLink("Student Academics","Index","Students")</li>
+                    </ul>
+                    </li>
+                    <li class="dropdown">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Reports<span class="caret"></span></a>
+                    <ul class="dropdown-menu">
+                        <li class="dropdown dropdown-submenu"><a href="#" class="dropdown-toggle" data-toggle="dropdown">Student</a>
+                        <ul class="dropdown-menu">
+                            <li>@Html.ActionLink("Student general","Students","Reports")</li>
+                            <li>@Html.ActionLink("Student Fees","StudentFee","Reports")</li>
+                            <li>@Html.ActionLink("Student Academics","StudentAcademics","Reports")</li>
+                        </ul>
+                        </li>
+                        <li class="divider"></li>
+                        <li class="dropdown dropdown-submenu"><a href="#" class="dropdown-toggle" data-toggle="dropdown">Staff</a>
+                        <ul class="dropdown-menu">
+                            <li>@Html.ActionLink("Staff general","Staff","Reports")</li>
+                            <li>@Html.ActionLink("Staff Salary","StaffSalary","Reports")</li>
+                        </ul>
+                        </li>
+                        <li class="divider"></li>
+                        <li class="dropdown dropdown-submenu"><a href="#" class="dropdown-toggle" data-toggle="dropdown">Expense</a>
+                        <ul class="dropdown-menu">
+                            <li>@Html.ActionLink("Expense","Expenses","Reports")</li>
+                            <li>@Html.ActionLink("DashBoard","ExpensesDashBoard","Reports")</li>
+                        </ul>
+                        </li>
+                    </ul>
+                    </li>
+                </ul>
+                @await Html.PartialAsync("_LoginPartial")
+            </div>
+        </div>
+    </nav>
+    <div class="container body-content" style="padding-top:24px">
+        <!-- <div class="flmnu">
+            <div class="mnubtn vericaltext">menu</div>
+            <div class="row">
+                <div class="col-md-10"><div class="btn btn-info" style="margin-left:4px;">Admin</div> </div>
+            </div>
+        </div> -->
+        @RenderBody()
+        <hr />
+        <footer>
+            <p>&copy; 2018 - portal.mps</p>
+        </footer>
+        <div id="getUserRolesUrl" style="display:none" data-request-url="@Url.Action("getUserRole", "Home")"></div>
+    </div>
+    
+    <environment include="Development">
+        <script src="~/lib/jquery/dist/jquery.js"></script>
+        <script src="~/lib/bootstrap/dist/js/bootstrap.js"></script>
+    </environment>
+    <environment exclude="Development">
+        <script src="https://ajax.aspnetcdn.com/ajax/jquery/jquery-2.2.0.min.js"
+                asp-fallback-src="~/lib/jquery/dist/jquery.min.js"
+                asp-fallback-test="window.jQuery"
+                crossorigin="anonymous"
+                integrity="sha384-K+ctZQ+LL8q6tP7I94W+qzQsfRV2a+AfHIi9k8z8l9ggpc8X+Ytst4yBo/hH+8Fk">
+        </script>
+        <script src="https://ajax.aspnetcdn.com/ajax/bootstrap/3.3.7/bootstrap.min.js"
+                asp-fallback-src="~/lib/bootstrap/dist/js/bootstrap.min.js"
+                asp-fallback-test="window.jQuery && window.jQuery.fn && window.jQuery.fn.modal"
+                crossorigin="anonymous"
+                integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa">
+        </script>
+    </environment>
+    <script>
+        (function ($) {
+            $(document).ready(function () {
+                $('ul.dropdown-menu [data-toggle=dropdown]').on('click', function (event) {
+                    event.preventDefault();
+                    event.stopPropagation();
+                    $(this).parent().siblings().removeClass('open');
+                    $(this).parent().toggleClass('open');
+                });
+                showRolesMenu();
+            });
+        })(jQuery);
+        function showRolesMenu(){
+            var userName = $('#username').text().trim();
+            if(userName)
+            {
+                var r='';
+                var u = $('#getUserRolesUrl').data('request-url');
+                $.post(u,{username:userName},function(res){
+                    r = res.role;
+                    $.each($('.panel'),function(i,v){
+                        var x = $(this).html();
+                        // if(r=='Student' || r=='Staff' || r=='Teacher' || r=='PrimeStaff'){
+                        //     if(x.indexOf('Logged ')==-1){
+                        //         $(this).hide();
+                        //     }
+                        // }
+                        if(r=='Accountant')
+                        {
+                            if(x.indexOf('Expense')>-1){
+                                $(this).show();
+                            }
+                            if(x.indexOf('Reporting')>-1){
+                                $(this).show();
+                            }
+                        }
+                        else if(r=='Admin')
+                        {
+                            if(!$(this).hasClass('js-student'))
+                                $(this).show();
+                        }
+                    });
+                
+                    $.each($('.navbar-nav > li' ),function(i,v){
+                        var x = $(v.firstElementChild).html();
+                        if(r=='Student' || r=='Staff' ){
+                            if(!x.startsWith('About') && !x.startsWith('<i') && !x.startsWith('Log')){
+                                $(v).hide();
+                            }
+                        }
+                        else if(r=='Accountant'){
+                            if(x.startsWith('Admin')){
+                                $(v).hide();
+                            }
+                        }
+                        else if(r=='Teacher')
+                        {
+                            if(!x.startsWith('About') && !x.startsWith('<i') && !x.startsWith('Log') && !x.startsWith('Students')){
+                                $(v).hide();
+                            }
+                        }
+                        else if(r=='PrimeStaff')
+                        {
+                            if(x.startsWith('Admin')){
+                                for(var i=0;i<6;i++){
+                                    v.children[1].children[i].hidden = true;
+                                }
+                            }
+                            if(!x.startsWith('About') && !x.startsWith('<i') && !x.startsWith('Log') && !x.startsWith('Students') && !x.startsWith('Admin')){
+                                $(v).hide();
+                            }
+                        }
+                        else if(r=='Admin'){
+                            $(v).show()
+                        }
+                    });
+                });
+            }
+            else{
+                $.each($('.navbar-nav > li' ),function(i,v){
+                    var x = $(v.firstElementChild).html();
+                    if(!x.startsWith('About') && !x.startsWith('<i') && !x.startsWith('Log')){
+                        $(v).hide();
+                    }
+                });
+            }
+        }
+    </script>
+    
+    @RenderSection("Scripts", required: false)
+</body>
+</html>

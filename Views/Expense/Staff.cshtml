@@ -1,0 +1,238 @@
+@{
+    ViewBag.Title = "Staff/Teachers Compensation";
+}
+<div class="container">
+<div class="row well well-sm text-center">
+    <h3>@ViewBag.Title</h3>
+</div>
+<div class="row" data-ng-app="app-mps" data-ng-controller="staff-expense" id="staff-expense">
+    <div class="loader text-danger" data-ng-show="wait">Loading...</div>
+    <div class="col-md-4" style="border-right:1px solid #CCC">
+        <div id="tableContainer">
+        <table class="table table-responsive table-striped table-hover">
+            <tr><td><input class="form-control" placeholder="Search" data-ng-model="searchtext" data-ng-change="changed()" id="searchText" /></td></tr>
+            @*<tr><td>{{searchtext}}</td></tr>*@
+            <tr data-ng-repeat="s in StaffList">
+                <td style="text-align:center;cursor:pointer" data-ng-click="getStaff(s.staffId)">
+                    <div class="row">
+                        <div class="col-md-1"><i ng-class="getActiveClass(s.staffName.split('-')[0])"></i></div>
+                        <div class="col-xs-6 text-left" style="margin-left:-11px">{{ s.staffName.split('-')[1] }}</div>
+                        <div class="col-xs-3 text-left">{{ s.staffName.split('-')[2] }}</div>
+                        </div>
+                    </div>
+                </td>
+            </tr>
+        </table>
+        </div>
+    </div>
+    <div class="col-md-8" data-ng-show="staff.staffId" style="padding-left: 28px;">
+        <div class="row">
+            <div class="col-md-12 fee">
+                <div class="row"> 
+                    <input ng-model=staff.staffId type="hidden"/>
+                    <input ng-model=staff.email type="hidden" />
+                    <div class="col-md-offset-1 col-md-8 col-md-offset-1 text-center"><h4 style="letter-spacing:3px">{{staff.firstName}} {{staff.middleName}} {{staff.lastName}}</h4></div>               
+                    <div class="col-md-4 col-md-offset-1"><h4></h4></div> 
+                </div>
+                <div class="row">
+                    <div class="col-md-5"><label>Joined on</label> {{ staff.joiningDate | date}}</div>
+                </div>
+                <div class="row">
+                    <div class="col-md-5"><label>Salary</label> {{ staff.totalSalary}}</div>
+                    <div class="col-md-5"><label>Defined on</label> {{ staff.salarySetDate | date}}</div>
+                    <div class="col-md-2"><button class="btn btn-info btn-sm" id="btnUpdateSalary"><i class="fa fa-pencil-square-o" ></i></button></div>
+                </div>
+                <div class="row" id="updateSalary" style="display:none">
+                    <form name="frmUpdateSalary" novalidate>
+                        <div class="row">
+                        <div class="col-md-1"></div>
+                        <div class="col-md-5">
+                            <label>New Salary</label>
+                            <input ng-model="salary.txtSalary" name="txtSalary" id="txtSalary" required class="form-control" ng-change="salaryChange()" />
+                            <span ng-show="frmUpdateSalary.txtSalary.$error.required && frmUpdateSalary.txtSalary.$dirty" class="text-danger">Salary is required.</span>
+                        </div>
+                        <div class="col-md-5">
+                            <label>Defined on</label>
+                            <input ng-model="salary.newSalaryDate" name="newSalaryDate" id="newSalaryDate" required class="form-control datepicker" readonly />
+                        </div>
+                        <div class="col-md-1"></div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-offset-4 col-md-7">
+                                <label>Deductions:</label>
+                                <table class="table table-responsive">
+                                    <tr data-ng-repeat="d in deductions">
+                                        <td style="text-align:left;">
+                                            <input type="checkbox" id="chkd_{{d.index}}" checked /> {{ d.name }}:{{ d.display}}
+                                        </td>
+                                    </tr>
+                                </table>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-4 text-right">
+                                <label>Final Salary</label>
+                            </div>
+                            <div class="col-md-7">
+                                <input type="text" id="newSalaryAmount" name="newSalaryAmount" data-ng-model="salary.newSalaryAmount" class = "form-control" readonly required/>
+                                <span ng-show="frmUpdateSalary.newSalaryAmount.$error.required && frmUpdateSalary.newSalary.$dirty" class="text-danger">Salary is required.</span>
+                            </div>
+                        </div>
+                        <div class="row" style="padding-top:12px">
+                            <div class="col-md-10 text-right">
+                                <span class="btn btn-sm btn-warning" ng-click="cancelUpdateSalaryForm()">Cancel</span>
+                        <span><button type="submit" class="btn btn-sm btn-primary" ng-disabled="frmUpdateSalary.$invalid || wait" ng-click="updateSalary()">Define new Salary</button></span>
+                            </div>
+                        </div>
+                    </form>
+                    
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-offset-1 col-md-10 col-md-offset-1">
+                <div class="row" style="margin-bottom:8px">
+                    <div class="col-md-3"></div>
+                    <div class="col-md-7 text-right" ><div class="btn btn-sm btn-info" id="btnaddsalary" <i class="fa fa-plus"></i> Pay Salary</div></div>
+                </div>
+            </div>
+        </div>
+        <div class="row" id="addsalary" style="display:none">
+            <div class="col-md-offset-1 col-md-10 col-md-offset-1">
+                <form name="frmAddSalary" novalidate>
+                <div class="row" style="border:1px solid #ccc;margin-bottom:8px">
+                    <div class="col-md-12">
+                        <table class="table table-bordered table-striped">
+                            <thead>
+                                <tr>
+                                    <td>Salary</td>
+                                    <td>Date</td>
+                                </tr>
+                            </thead>
+                            <tr>
+                                <td>
+                                    <div class="row">
+                                        <div class="col-md-1 text-right" style="padding-right:0px">
+                                            <i class="fa fa-lg fa-inr" style="padding-top: 12px;"></i>
+                                        </div>
+                                        <div class="col-md-10">
+                                            <input id=salaryAmount name=salaryAmount ng-model="salary.Amount" class="form-control" required/>
+                                            <span ng-show="frmAddSalary.salaryAmount.$error.required && frmAddSalary.salaryAmount.$dirty" class="text-danger">Salary is required.</span>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td><input ng-model="salary.Date" id=salaryDate name=salaryDate class="form-control datepicker" required readonly/></td>
+                            </tr>
+                        </table>
+                    </div>
+                    <div class="col-md-12 text-right">
+                        <!-- <span><a onclick="$('#addsalary').toggle();$('#btnaddsalary').toggle();$('#salaryAmount').val('')" style="cursor:default">Cancel</a></span> -->
+                        <span class="btn btn-sm btn-warning" ng-click="cancelAddSalaryForm()">Cancel</span>
+                        <span><button type="submit" class="btn btn-sm btn-primary" ng-disabled="frmAddSalary.$invalid || wait" ng-click="addSalary()">Add Salary</button></span>
+                    </div>
+                </div>
+                </form>
+            </div>
+        </div>
+        <div class="row" style="padding-top:6px;padding-bottom:6px;">
+            <table class="table table-bordered table-striped">
+                <thead>
+                    <tr>
+                        <!-- <td>ID</td> -->
+                        <td>Paid Amount</td>
+                        <td>Paid Date</td>
+                        <td>
+                            <div class="row">
+                                <div class="col-xs-9">Delete</div>
+                                <div class="col-xs-3">
+                                    <div class="btn btn-success btn-sm" id="btnSalaryRefresh" title="Refresh Salary data" ng-click="getSalary(staff.staffId)">
+                                    <i class="fa fa-refresh" ng-class="{'fa-spin': salaryWait}"></i>
+                                    </div>
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+                </thead>
+                <tr data-ng-if="s.paidAmount>0" data-ng-repeat="s in staff.salaryPayments">
+                    <!-- <td style="text-align:center">{{ s.id }}</td> -->
+                    <td style="text-align:center">{{ s.paidAmount  }}</td>
+                    <td style="text-align:center">{{ s.paidDate  }}</td>
+                    <td>
+                        <div class="btn-group">
+                            <button type="button" class="btn btn-default dropdown-toggle"
+                                    data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                <i class="fa fa-envelope-o">&nbsp;&nbsp;</i>Send<span class="caret"></span>
+                            </button>
+                            <ul class="dropdown-menu">
+                                
+                                <li><a ng-click="sendSalaryDetails(s.id)" style="cursor:pointer">Send Salary details to registered email  <i class="fa fa-arrow-right"></i></a></li>
+                                <li>
+                                    Send to >
+                                    <input type="email" style="width:auto" id="newEmail" name="newEmail" />
+                                    <button ng-click="sendSalaryDetails(s.id)"><i class="fa fa-arrow-right"></i></button>
+                                </li>
+                            </ul>
+                        </div>
+                        &nbsp;&nbsp;&nbsp;&nbsp;
+                        <div class="fa fa-close btn btn-danger btn-sm" ng-show="s.id>0" ng-confirm="Are you sure<br>you want to delete?" ng-click="deleteSalary(s.id)"></div></span></td>
+                </tr>
+            </table>
+        </div>
+    </div>
+    <div class="col-md-8" data-ng-hide="staff.staffId" style="padding-top:48px">
+        <h4>&lt;&lt;Select a staff member</h4>
+    </div>
+</div>
+@section scripts{
+    <script src="~/lib/angular/angular.min.js"></script>
+    <script src="~/lib/ng-confirm/dist/ng-confirm.min.js"></script>
+    <environment include="Development">
+        <script src="~/js/expense-staff.js"></script>
+        <script src="/js/jquery.numeric.js"></script>
+        <script src="~/js/bootstrap-datepicker.js"></script>
+    </environment>
+    <environment exclude="Development">
+        <script src="~/minjs/expense-staff.js"></script>
+        <script src="/minjs/jquery.numeric.js"></script>
+        <script src="~/minjs/bootstrap-datepicker.js"></script>
+    </environment>
+    <link rel="stylesheet" href="/css/datepicker.css" />
+    <script>
+        $(document).ready(function () {
+            var urlParams = new URLSearchParams(window.location.search);
+            var staffId = urlParams.get('id');
+            if(staffId){
+                var $scope = angular.element($('[data-ng-controller="staff-expense"]')).scope();
+                $scope.getStaff(staffId);
+            }
+            $('#salaryAmount').numeric({ decimalPlaces: 2 , negative: false });
+            $('#txtSalary').numeric({ decimalPlaces: 2 , negative: false });
+            $('.datepicker').datepicker({
+                format: 'dd-mm-yyyy',
+            }).on('changeDate', function (ev) {
+                var $scope = angular.element($('[data-ng-controller="staff-expense"]')).scope();
+                $scope.salary.Date= $('#salaryDate').val();
+                $scope.salary.newSalaryDate= $('#newSalaryDate').val();
+            });
+            $('#btnaddsalary').click(function () {
+                $('#addsalary').toggle();
+                $('#btnUpdateSalary').toggle();
+                $('#salaryAmount').val('');
+                var $scope = angular.element($('[data-ng-controller="staff-expense"]')).scope();
+                $scope.salary.Amount='';
+                $(this).hide();
+            });
+            $('#btnUpdateSalary').click(function () {
+                $('#updateSalary').toggle();
+                $('#btnaddsalary').toggle();
+                $('#txtSalary').val('');
+                var $scope = angular.element($('[data-ng-controller="staff-expense"]')).scope();
+                $scope.salary.txtSalary='';
+                $(this).hide();
+            });
+            $('#newEmail').change(function(){
+                console.log($(this).val());
+            });
+       });
+    </script>
+    }

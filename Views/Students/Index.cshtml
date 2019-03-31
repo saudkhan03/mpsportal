@@ -1,0 +1,375 @@
+@{
+    ViewBag.Title = "Students";
+}
+<div class="container">
+<div class="row well well-sm text-center">
+    <h3>@ViewBag.Title</h3>
+</div>
+<div class="row" data-ng-app="app-mps" data-ng-controller="student-student">
+    <div class="loader text-danger" data-ng-show="wait">Loading...</div>
+    <div class="col-md-4" style="border-right:1px solid #CCC">
+        <div id="tableContainer">
+        <table class="table table-responsive table-striped table-hover">
+            <tr><td>
+                <div class="row">
+                    <div class="col-xs-9">
+                        <input class="form-control" placeholder="Search" data-ng-model="searchtext" data-ng-change="changed()" id="searchText" />
+                    </div>
+                    <div class="col-xs-3 ">
+                        <div class="checkbox-inline text-left"><input type="checkbox" id="chkActive" checked data-ng-click="changeListActive()"/>Active</div>
+                    </div>
+                </div>
+            </td></tr>
+            <tr data-ng-repeat="s in StudentList">
+                <td style="text-align:center;cursor:pointer" data-ng-click="getStudent(s.studentId,s.studentName.split('-')[3])">
+                    <div class="row">
+                        <!-- {{ s.studentName.split('-')[0] }} -->
+                        <div class="col-md-1"><i ng-class="getActiveClass(s.studentName.split('-')[0])"></i></div>
+                        <div class="col-xs-5 text-left" style="margin-left:-11px">{{ s.studentName.split('-')[1] }}</div>
+                        <div class="col-xs-2 text-left">{{ s.studentName.split('-')[2] }}</div>
+                        <div class="col-xs-4 text-center">{{ s.studentName.split('-')[3]+ s.studentName.split('-')[4] }}</div>
+                    </div>
+                </td>
+            </tr>
+        </table>
+        </div>
+    </div>
+    <div class="col-md-8" data-ng-show="studentMatrix" >
+        <input type="hidden" id="hidGrade" />
+        <ul class="nav nav-tabs">
+            <li class="active"><a data-toggle="tab" href="#studentMatrix">Marks</a></li>
+            <li><a data-toggle="tab" href="#char">Character</a></li>
+        </ul>
+        <div class="tab-content">
+            <div id="studentMatrix" class="tab-pane fade in active">
+                <table class="table table-bordered" style="color:#092A72">
+                    <tr style="text-align:center">
+                        <th>Subject</th>
+                        <th>First Mid Term Examination (20)</th>
+                        <th>Second Mid Term Examination (20)</th>
+                        <th>First Terminal Examination (60)</th>
+                        <th>Total (100)</th>
+                        <th>Third Mid Term Examination (20)</th>
+                        <th>Fourth Mid Term Examination (20)</th>
+                        <th>Second Terminal Examination (60)</th>
+                        <th>Total (100)</th>
+                        <th>Grand Total (200)</th>
+                        <th>Final Average (%)</th>
+                        <th>Median Marks in the Class</th>
+                    </tr>
+                    <tr data-ng-repeat="s in studentMatrix" class="text-center">
+                        <td style="font-size:smaller;padding-left: 3px;padding-right: 3px;">{{s.subject}}</td>
+                        <td>
+                            <div data-ng-show="{{s.type=='Marks'}}">
+                                <input style="width:32px" class="js-numeric" ng-model="s.exam1" maxlength="2" data-ng-change="getTotals()"/>
+                            </div>
+                            <div data-ng-show="{{s.type=='Grade'}}">
+                                <select ng-model="s.exam1">
+                                    <option value="-">-</option>
+                                    <option value="A">A</option>
+                                    <option value="B">B</option>
+                                    <option value="C">C</option>
+                                    <option value="D">D</option>
+                                    <option value="E">E</option>
+                                </select>
+                            </div>
+                            <div data-ng-show="{{s.type=='Value'}} && {{s.subject=='Total'}}">
+                                {{exam1Tot}}
+                            </div>
+                            <div data-ng-show="{{s.type=='Value'}} && {{s.subject=='Percentage'}}">
+                                {{exam1Per}}
+                            </div>
+                            <div data-ng-show="{{s.type=='Attendance'}} && {{s.subject=='Attendance'}}">
+                                <input style="width:42px" ng-model="attendanceArray[0]" />
+                            </div>
+                            <div data-ng-show="{{s.type=='Text'}} && {{s.subject=='Remarks'}}" style="position: absolute;">
+                                <input style="width:282px" ng-model="remarksArray[0]" />
+                            </div>
+                        </td>
+                        <td>
+                            <div data-ng-show="{{s.type=='Marks'}}">
+                                <input style="width:32px" ng-model="s.exam2" maxlength="2" data-ng-change="getTotals()"/>
+                            </div>
+                            <div data-ng-show="{{s.type=='Grade'}}">
+                                <select ng-model="s.exam2">
+                                    <option value="-">-</option>
+                                    <option value="A">A</option>
+                                    <option value="B">B</option>
+                                    <option value="C">C</option>
+                                    <option value="D">D</option>
+                                    <option value="E">E</option>
+                                </select>
+                            </div>
+                            <div data-ng-show="{{s.type=='Value'}} && {{s.subject=='Total'}}">
+                                {{exam2Tot}}
+                            </div>
+                            <div data-ng-show="{{s.type=='Value'}} && {{s.subject=='Percentage'}}">
+                                {{exam2Per}}
+                            </div>
+                            <div data-ng-show="{{s.type=='Attendance'}}">
+                                <input style="width:42px" ng-model="attendanceArray[1]" />
+                            </div>
+                            <!-- <div data-ng-show="{{s.type=='Text'}}">
+                                <input style="width:52px" ng-model="s.exam2" />
+                            </div> -->
+                        </td>
+                        <td>
+                            <div data-ng-show="{{s.type=='Marks'}}">
+                                <input style="width:32px" ng-model="s.exam3" maxlength="3" data-ng-change="getTotals()"/>
+                            </div>
+                            <div data-ng-show="{{s.type=='Grade'}}">
+                                <select ng-model="s.exam3">
+                                    <option value="-">-</option>
+                                    <option value="A">A</option>
+                                    <option value="B">B</option>
+                                    <option value="C">C</option>
+                                    <option value="D">D</option>
+                                    <option value="E">E</option>
+                                </select>
+                            </div>
+                            <div data-ng-show="{{s.type=='Value'}} && {{s.subject=='Total'}}">
+                                {{exam3Tot}}
+                            </div>
+                            <div data-ng-show="{{s.type=='Value'}} && {{s.subject=='Percentage'}}">
+                                {{exam3Per}}
+                            </div>
+                            <div data-ng-show="{{s.type=='Attendance'}}">
+                                <input style="width:42px" ng-model="attendanceArray[2]" />
+                            </div>
+                            <!-- <div data-ng-show="{{s.type=='Text'}}">
+                                <input style="width:52px" ng-model="s.exam3" />
+                            </div> -->
+                        </td>
+                        <td>
+                            <div data-ng-show="{{s.type=='Marks'}}">
+                                {{(s.exam1-0) + (s.exam2-0) + (s.exam3-0)}}
+                            </div>
+                            <div data-ng-show="{{s.type=='Grade'}}">
+                                {{getGrade((s.exam1)+(s.exam2)+(s.exam3))}}
+                            </div>
+                            <div data-ng-show="{{s.type=='Value'}} && {{s.subject=='Total'}}">
+                                {{Tot1}}
+                            </div>
+                            <div data-ng-show="{{s.type=='Value'}} && {{s.subject=='Percentage'}}">
+                                {{perTot1}}
+                            </div>
+                        </td>
+                        <td>
+                            <div data-ng-show="{{s.type=='Marks'}}">
+                                <input style="width:32px" ng-model="s.exam4" maxlength="2" data-ng-change="getTotals()"/>
+                            </div>
+                            <div data-ng-show="{{s.type=='Grade'}}">
+                                <select ng-model="s.exam4">
+                                    <option value="-">-</option>
+                                    <option value="A">A</option>
+                                    <option value="B">B</option>
+                                    <option value="C">C</option>
+                                    <option value="D">D</option>
+                                    <option value="E">E</option>
+                                </select>
+                            </div>
+                            <div data-ng-show="{{s.type=='Value'}} && {{s.subject=='Total'}}">
+                                {{exam4Tot}}
+                            </div>
+                            <div data-ng-show="{{s.type=='Value'}} && {{s.subject=='Percentage'}}">
+                                {{exam4Per}}
+                            </div>
+                            <div data-ng-show="{{s.type=='Attendance'}}">
+                                <input style="width:42px" ng-model="attendanceArray[3]" />
+                            </div>
+                             <div data-ng-show="{{s.type=='Text'}}" style="position: absolute;">
+                                <input style="width:252px" ng-model="remarksArray[3]" />
+                            </div>
+                        </td>
+                        <td>
+                            <div data-ng-show="{{s.type=='Marks'}}">
+                                <input style="width:32px" ng-model="s.exam5" maxlength="2" data-ng-change="getTotals()"/>
+                            </div>
+                            <div data-ng-show="{{s.type=='Grade'}}">
+                                <select ng-model="s.exam5">
+                                    <option value="-">-</option>
+                                    <option value="A">A</option>
+                                    <option value="B">B</option>
+                                    <option value="C">C</option>
+                                    <option value="D">D</option>
+                                    <option value="E">E</option>
+                                </select>
+                            </div>
+                            <div data-ng-show="{{s.type=='Value'}} && {{s.subject=='Total'}}">
+                                {{exam5Tot}}
+                            </div>
+                            <div data-ng-show="{{s.type=='Value'}} && {{s.subject=='Percentage'}}">
+                                {{exam5Per}}
+                            </div>
+                            <div data-ng-show="{{s.type=='Attendance'}}">
+                                <input style="width:42px" ng-model="attendanceArray[4]" />
+                            </div>
+                            <!-- <div data-ng-show="{{s.type=='Text'}}">
+                                <input style="width:52px" ng-model="s.exam5" />
+                            </div> -->
+                        </td>
+                        <td>
+                            <div data-ng-show="{{s.type=='Marks'}}">
+                                <input style="width:32px" ng-model="s.exam6" maxlength="3" data-ng-change="getTotals()"/>
+                            </div>
+                            <div data-ng-show="{{s.type=='Grade'}}">
+                                <select ng-model="s.exam6">
+                                    <option value="-">-</option>
+                                    <option value="A">A</option>
+                                    <option value="B">B</option>
+                                    <option value="C">C</option>
+                                    <option value="D">D</option>
+                                    <option value="E">E</option>
+                                </select>
+                            </div>
+                            <div data-ng-show="{{s.type=='Value'}} && {{s.subject=='Total'}}">
+                                {{exam6Tot}}
+                            </div>
+                            <div data-ng-show="{{s.type=='Value'}} && {{s.subject=='Percentage'}}">
+                                {{exam6Per}}
+                            </div>
+                            <div data-ng-show="{{s.type=='Attendance'}}">
+                                <input style="width:42px" ng-model="attendanceArray[5]" />
+                            </div>
+                            <!-- <div data-ng-show="{{s.type=='Text'}}">
+                                <input style="width:52px" ng-model="s.exam6" />
+                            </div> -->
+                        </td>
+                        <td>
+                            <div data-ng-show="{{s.type=='Marks'}}">
+                                {{(s.exam4-0) + (s.exam5-0) + (s.exam6-0)}}
+                            </div>
+                            <div data-ng-show="{{s.type=='Grade'}}">
+                                {{getGrade((s.exam4) + (s.exam5) + (s.exam6))}}
+                            </div>
+                            <div data-ng-show="{{s.subject=='Remarks'}}" style="position: absolute;">
+                                <input style="width:185px" ng-model="s.median" />
+                            </div>
+                            <div data-ng-show="{{s.type=='Value'}} && {{s.subject=='Total'}}">
+                                {{Tot2}}
+                            </div>
+                            <div data-ng-show="{{s.type=='Value'}} && {{s.subject=='Percentage'}}">
+                                {{perTot2}}
+                            </div>
+                        </td>
+                        <td>
+                            <div data-ng-show="{{s.type=='Marks'}}">
+                                {{(s.exam1-0) + (s.exam2-0) + (s.exam3-0)+(s.exam4-0) + (s.exam5-0) + (s.exam6-0)}}
+                            </div>
+                            <div data-ng-show="{{s.type=='Grade'}}">
+                                {{getGrade((s.exam1) + (s.exam2) + (s.exam3) + (s.exam4) + (s.exam5) + (s.exam6))}}
+                            </div>
+                            <div data-ng-show="{{s.type=='Value'}} && {{s.subject=='Total'}}">
+                                {{Tot3}}
+                            </div>
+                            <div data-ng-show="{{s.type=='Value'}} && {{s.subject=='Percentage'}}">
+                                {{perTot3}}
+                            </div>
+                        </td>
+                        <td>
+                            <div data-ng-show="{{s.type=='Marks'}}">
+                                {{((s.exam1-0) + (s.exam2-0) + (s.exam3-0)+(s.exam4-0) + (s.exam5-0) + (s.exam6-0))/2}}%
+                            </div>
+                            <div data-ng-show="{{s.type=='Grade'}}">
+                                {{getGrade((s.exam1) + (s.exam2) + (s.exam3) + (s.exam4) + (s.exam5) + (s.exam6))}}
+                            </div>
+                            <div data-ng-show="{{s.type=='Value'}} && {{s.subject=='Total'}}">
+                                {{finalAvg}}
+                            </div>
+                            <div data-ng-show="{{s.type=='Value'}} && {{s.subject=='Percentage'}}">
+                                {{perFinalAvg}}
+                            </div>
+                        </td>
+                        <td>
+                            <div data-ng-hide="{{s.subject=='Remarks'}}">
+                                <input style="width:32px" ng-model="remarksArray[5]" />
+                            </div>
+                        </td>
+                    </tr>
+                </table>
+                <div class="row">
+                    <div class="col-md-offset-4 col-md-2">
+                        <button class="btn btn-success" data-ng-click="updateMatrix()">Save</button>
+                    </div>
+                    <div class="col-md-2 col-md-offset-2">
+                        <button class="btn btn-success" data-ng-click="printMatrix()">Preview</button>
+                    </div>
+                </div>
+            </div>
+            <div id="char" class="tab-pane fade">
+                <h2 style="color:#092A72;text-align:center;padding-bottom:12px">CHARACTER &amp; PERSONALITY PROFILE</h2>
+                <table class="table table-bordered" style="color:#092A72;font-size:medium">
+                    <tr style="text-align:center">
+                        <td>Social Habits</td>
+                        <td>Grades</td>
+                        <td>Residential Habits</td>
+                        <td>Grades</td>
+                    </tr>
+                    <tr data-ng-repeat="c in characterMatrix" class="text-center">
+                        <td>{{c.social}}</td>
+                        <td>
+                            <div>
+                                <select ng-model="c.sg">
+                                    <option value="-">-</option>
+                                    <option value="A">A</option>
+                                    <option value="B">B</option>
+                                    <option value="C">C</option>
+                                    <option value="D">D</option>
+                                </select>
+                            </div>
+                        </td>
+                        <td>{{c.residential}}</td>
+                        <td> 
+                            <div>
+                                <select ng-model="c.rg">
+                                    <option value="-">-</option>
+                                    <option value="A">A</option>
+                                    <option value="B">B</option>
+                                    <option value="C">C</option>
+                                    <option value="D">D</option>
+                                </select>
+                            </div>
+                        </td>
+                    </tr>
+                </table>
+                <div class="row">
+                    <div class="col-md-12 text-center" style="padding-bottom:32px">
+                        <select data-ng-model="promoted">
+                            <option value="PROMOTED">PROMOTED</option>
+                            <option value="PROMOTED ON TRIAL">PROMOTED ON TRIAL</option>
+                            <option value="NOT READY FOR">NOT READY FOR</option>
+                        </select>
+                        <input type="text" id="txtNotReady" data-ng-model="notready" data-ng-hide="promoted != 'NOT READY FOR'" >
+                    </div>
+                    <div class="col-md-12 text-center">
+                        <button class="btn btn-success" data-ng-click="printCharacterCert()">Preview</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+    </div>
+    <div class="col-md-8" data-ng-hide="studentMatrix" style="padding-top:48px">
+        <h4>&lt;&lt;Select a student</h4>
+    </div>
+</div>
+</div>
+@section scripts{
+    <script src="~/lib/angular/angular.min.js"></script>
+    <environment include="Development">
+        <script src="~/js/student-student.js"></script>
+        <script src="~/js/bootstrap-datepicker.js"></script>
+        <script src="~/js/jquery.numeric.js"></script>
+    </environment>
+    <environment exclude="Development">
+        <script src="~/minjs/student-student.js"></script>
+        <script src="~/minjs/bootstrap-datepicker.js"></script>
+        <script src="~/minjs/jquery.numeric.js"></script>
+    </environment>
+    <link rel="stylesheet" href="/css/datepicker.css" />
+    <script>
+    $(document).ready(function(){
+        $('.js-numeric').numeric({negative: false });
+    });
+    </script>
+}

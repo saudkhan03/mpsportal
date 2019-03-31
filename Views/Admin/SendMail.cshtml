@@ -1,0 +1,72 @@
+@{
+    ViewBag.Title = "Send Mail(s)";
+}
+<div class="container">
+<div class="row well well-sm text-center">
+    <h3>@ViewBag.Title</h3>
+</div>
+<div class="row">
+    <div class="loader text-danger" style="display:none">Loading...</div>
+    <div class="col-md-4" style="border-right:1px solid #CCC">
+        <ul class="nav nav-tabs">
+            <li class="active"><a data-toggle="tab" href="#students">Students</a></li>
+            <li><a data-toggle="tab" href="#staffs">Staff</a></li>
+        </ul>
+        <div class="tab-content">
+            <div id="students" class="tab-pane fade in active">
+                <table id="gridStudents"></table>
+                <!-- <div id="pagerStudents"></div> -->
+            </div>
+            <div id="staffs" class="tab-pane fade">
+                <table id="gridStaff"></table>
+                <!-- <div id="pagerStaff"></div> -->
+            </div>
+        </div>
+    </div>
+    <div class="col-md-8" style="padding-top:48px" data-ng-show="user.email">
+        <div class="row">
+            <div class="col-md-12 text-center"><h4>mail message</h4></div>
+            <div class="row">
+                <div class="col-md-offset-1 col-md-2"><label>To</label><div class="btn btn-sm btn-default js-addMails" style="margin-left:13px">>></div></div>
+                <div class="col-md-8">
+                    <input id="txtTo" class="form-control" readonly/>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-offset-1 col-md-2"><label>Cc</label></div>
+                <div class="col-md-8">
+                    <input type="email" id="txtCC" class="form-control"/>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-offset-1 col-md-2"><label>Subject</label></div>
+                <div class="col-md-8">
+                     <input type="text" id="txtSubject" class="form-control"/>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-offset-1 col-md-2"><label>Message</label></div>
+                <div class="col-md-8">
+                    <textarea cols="15" rows="5" id="txtBody" class="form-control"></textarea>
+                </div>
+            </div>
+            <div class="row" style="padding-top:12px">
+                <div class="col-md-10 text-right">
+                   <button id="btnSend" class="btn btn-primary" disabled>Send</button>
+                </div>
+                
+            </div>
+        </div>
+    </div>
+</div>
+    @section scripts{
+    <link rel="stylesheet" href="~/css/jquery-ui.css" />
+    <link rel="stylesheet" href="~/css/ui.jqgrid.min.css" />
+    <script src="~/js/jquery.jqgrid.min.js"></script>
+    <environment include="Development">
+        <script src="~/js/jquery.admin-sendmails.js"></script>
+    </environment>
+    <environment exclude="Development">
+        <script src="~/minjs/jquery.admin-sendmails.js"></script>
+    </environment>
+}

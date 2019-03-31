@@ -1,0 +1,16 @@
+@{
+    ViewBag.Title = "Student Academic report";
+}
+<div class="container">
+<div class="row well well-sm text-center">
+    <h3>@ViewBag.Title</h3>
+</div>
+<div class="row">
+    <div class="col-md-12 text-right">
+        <button class="btn btn-default"><i class="fa fa-file-excel-o"></i>&nbsp;Export</button>
+    </div>
+    <div class="col-xs-12">
+        <table id="grid"></table>
+        <div id="pager"></div>
+    </div>
+</div>

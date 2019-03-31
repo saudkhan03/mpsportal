@@ -1,0 +1,86 @@
+@{
+    ViewBag.Title = "Staff report";
+}
+<div class="container">
+<div class="row well well-sm text-center">
+    <h3>@ViewBag.Title</h3>
+</div>
+<div class="row">
+    <div class="col-md-12 text-right">
+        <button class="btn btn-default"><i class="fa fa-file-excel-o"></i>&nbsp;Export</button>
+    </div>
+    <div class="col-xs-12">
+        <table id="grid"></table>
+        <div id="pager"></div>
+    </div>
+</div>
+@section scripts{
+   <link rel="stylesheet" href="~/css/jquery-ui.css" />
+    <link rel="stylesheet" href="~/css/ui.jqgrid.min.css" />
+    <script src="~/js/jquery.jqgrid.min.js"></script>
+    <script>
+    $(document).ready(function () {
+        var u = '/Reports/LoadStaff';
+        $("#grid").jqGrid({
+            //datatype: "local",
+            //data: myData,
+            url: u,
+            datatype: "json",
+            colNames: ['StaffId','active','Teacher','JoiningDate','FirstName ', 'MiddleName', 'LastName', 'Address1', 'Phone','DateOfBirth', 'Email', 'UserName', 'CreatedBy'],
+            //colNames: ['id', 'Email', 'First Name', 'Last Name', 'Phone', 'Veri E', 'Veri P'],
+            colModel: [
+                       { name: 'staffId', index: 'staffId', hidden:true, align: 'center'},
+                       { name: 'isActive', index: 'isActive', width: 40, align: 'center',formatter: 'checkbox',edittype: 'checkbox', editoptions: {value: 'true:false', defaultValue: 'true'}},
+                       { name: 'isTeacher', index: 'isTeacher', width: 40, align: 'center'},
+                       { name: 'joiningDate', index: 'joiningDate', width: 60, align: 'center', sorttype: 'date', formatter: 'date', formatoptions: {newformat: 'd-M-Y'}, datefmt: 'd-M-Y'},
+                       { name: 'firstName', index: 'firstName', width: 40, align: 'center'},
+                       { name: 'middleName', index: 'middleName', width: 40 , align: 'center'},
+                       { name: 'lastName', index: 'lastName', width: 40, align: 'center' },
+                       { name: 'address1', index: 'address1', width: 100, align: 'center' },
+                       { name: 'phone', index: 'phone', width: 40, align: 'center' },
+                       { name: 'dob', index: 'dob', width: 60, format:'date', align: 'center', sorttype: 'date', formatter: 'date', formatoptions: {newformat: 'd-M-Y'}, datefmt: 'd-M-Y'},
+                       { name: 'email', index: 'email', width: 80, align: 'center' },
+                       { name: 'userName', index: 'userName', width: 40, align: 'center' },
+                       { name: 'staffCreatedBy', index: 'staffCreatedBy', width: 50, align: 'center' }],
+                      
+            cmTemplate: { resizable: false },
+            loadonce: true,
+            rowNum: 300,
+            rowList: [50, 70, 90],
+            pager: '#pager',
+            sortname: 'FirstName',
+            viewrecords: true,
+            sortorder: "asc",
+            width:1024,
+            cmTemplate: { resizable: true },
+            //ondblClickRow: function (rowId) {
+            //    var rowData = jQuery(this).getRowData(rowId);
+            //    var id = rowData['userId'];
+            //    showAccount(id);
+            //},
+            loadComplete: function (data) {
+                var  x = data;
+            }
+        });
+
+        var mygrid = jQuery('#grid'),
+        cDiv = mygrid[0].grid.cDiv;
+        mygrid.setCaption("");
+        $("a.ui-jqgrid-titlebar-close", cDiv).unbind();
+        $(cDiv).hide();
+        $("#grid").jqGrid('navGrid', '#pager', { edit: false, add: false, del: false });
+        $("#grid").jqGrid('filterToolbar', { stringResult: true, searchOnEnter: false, defaultSearch: "cn" });
+
+        $(".btn").on("click", function(){
+            var allRowsInGrid = $('#grid').jqGrid('getGridParam','data');
+            $('.loader').show();
+            $.post('/Reports/ExportStaff',{T:'Staff', data:allRowsInGrid},function(result){
+                $('.loader').hide();
+                if(result){
+                    window.location.href=result;
+                }
+            });
+        });
+    });
+</script>
+}

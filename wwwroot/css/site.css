@@ -1,0 +1,214 @@
+﻿body {
+    padding-top: 50px;
+    padding-bottom: 20px;
+}
+
+/* Wrapping element */
+/* Set some basic padding to keep content from hitting the edges */
+.body-content {
+    padding-left: 15px;
+    padding-right: 15px;
+}
+
+/* Carousel */
+.carousel-caption p {
+    font-size: 20px;
+    line-height: 1.4;
+}
+
+/* Make .svg files in the carousel display properly in older browsers */
+.carousel-inner .item img[src$=".svg"] {
+    width: 100%;
+}
+
+/* QR code generator */
+#qrCode {
+    margin: 15px;
+}
+/*dropdown menu*/
+.dropdown-submenu{ position: relative; }
+
+.dropdown-submenu>.dropdown-menu{
+  top:0;
+  left:100%;
+  margin-top:-6px;
+  margin-left:-1px;
+  -webkit-border-radius:0 6px 6px 6px;
+  -moz-border-radius:0 6px 6px 6px;
+  border-radius:0 6px 6px 6px;
+}
+
+.dropdown-submenu>a:after{
+  display:block;
+  content:" ";
+  float:right;
+  width:0;
+  height:0;
+  border-color:transparent;
+  border-style:solid;
+  border-width:5px 0 5px 5px;
+  border-left-color:#cccccc;
+  margin-top:5px;margin-right:-10px;
+}
+.dropdown-submenu:hover>a:after{
+  border-left-color:#555;
+}
+.dropdown-submenu.pull-left{ float: none; }
+.dropdown-submenu.pull-left>.dropdown-menu{
+  left: -100%;
+  margin-left: 10px;
+  -webkit-border-radius: 6px 0 6px 6px;
+  -moz-border-radius: 6px 0 6px 6px;
+  border-radius: 6px 0 6px 6px;
+}
+
+/*-----------------*/
+.fee
+{
+    border: 1px solid #cccccc;
+    border-radius: 4px;
+    background-color: whitesmoke;
+    padding: 8px;
+    margin-bottom: 12px;
+}
+.fakedd{
+    border: 1px solid #ccc;
+    border-top-left-radius: 0px;
+    border-top-right-radius: 0px;
+    border-bottom-left-radius: 4px;
+    border-bottom-right-radius: 4px;
+    padding-left: 12px;
+    padding-top: 3px;
+    padding-bottom: 3px;
+    display: none;
+    position: absolute;
+    z-index: 2;
+    background-color: #fff;
+    width: 88%;
+    margin-top: -3px;
+}
+.expense-date-show{
+    position: fixed;
+    z-index: 3;
+    background-color: azure;
+    margin-top: -60px;
+    padding-right: 49px;
+}
+/*---checkbox for active and teacher*/
+.chkActive{
+    background-color:green;outline:5px solid green
+}
+.chkInActive{
+    background-color:yellow;outline:5px solid yellow
+}
+.printStudentBillRed{
+    color:red;
+}
+.printStudentBillBlue{
+    color:#092A72
+}
+.activeUser{
+    color: transparent;
+}
+.activesubject{
+    color: lightblue;
+}
+.inactiveUser{
+    color:red;
+}
+.loader{
+    top: 50px;
+    position: fixed;
+    left: 49%;
+    z-index: 5;
+    background-color: beige;
+    padding: 5px;
+    border-radius: 6px;
+    box-shadow: 3px 3px #ccc;
+    font-weight: 600;
+    color: #a94442;
+    }
+#tableContainer{
+    height:650px;
+    overflow-y:scroll;
+    overflow-x:hidden;
+}
+.flmnu{
+    padding-top:7px;
+    width:210px;
+    height: 80%;
+    background-color: #CCCCCC80;
+    position: fixed;
+    z-index: 1024;
+    left: -14.6%;
+    border-top-right-radius: 4px
+}
+.flmnu > .mnubtn{
+    width:12px;
+    height:48px;
+    background-color:#63b2da;
+    color:white;
+    font-size:x-small;
+    float:right;
+    text-align:center;
+    cursor:pointer;
+    border-bottom-left-radius:8px;
+    border-top-left-radius:8px;
+}
+.vericaltext{
+    writing-mode: vertical-rl;
+    text-orientation: upright;
+}
+.center-block {
+    display: block;
+    margin-right: auto;
+    margin-left: auto;
+    height: 300px;
+    width: 100%;
+}
+.table > thead > tr > th, .table > tbody > tr > th, .table > tfoot > tr > th, .table > thead > tr > td, .table > tbody > tr > td, .table > tfoot > tr > td {
+    padding: 2px;
+    line-height: 1.42857143;
+    vertical-align: top;
+    border-top: 1px solid #ddd;
+    font-size: 13px;
+}
+th {
+    text-align: center;
+}
+
+.infobox{
+    background: #f0f9ff; /* Old browsers */
+background: -moz-linear-gradient(top, #f0f9ff 0%, #cbebff 47%, #a1dbff 100%); /* FF3.6-15 */
+background: -webkit-linear-gradient(top, #f0f9ff 0%,#cbebff 47%,#a1dbff 100%); /* Chrome10-25,Safari5.1-6 */
+background: linear-gradient(to bottom, #f0f9ff 0%,#cbebff 47%,#a1dbff 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
+filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#f0f9ff', endColorstr='#a1dbff',GradientType=0 ); /* IE6-9 */
+padding:4px;
+min-height: 119px;
+cursor: default;
+user-select: none;
+}
+.infobox > .head{
+    padding:6px;
+    border:1px inset #FFF;
+    border-radius: 3px;
+    margin-bottom: 4px;
+    max-width: 200px
+}
+.infobox > .data{
+    padding: 2px;
+    letter-spacing: 1px;
+    display:-webkit-inline-box;
+    max-width: 319px;
+}
+/* Hide/rearrange for smaller screens */
+@media screen and (max-width: 767px) {
+    /* Hide captions */
+    .carousel-caption {
+        display: none;
+    }
+    .flmnu{
+        display: none;
+    }
+
+}

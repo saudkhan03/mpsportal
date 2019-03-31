@@ -1,0 +1,88 @@
+@model portal.mps.Models.ViewModels.SubjectForm
+@{
+    ViewBag.Title = "Add/Edit Subjects";
+}
+<div class="container">
+<div class="row well well-sm text-center">
+    <h3>@ViewBag.Title</h3>
+</div>
+<div class="row" data-ng-app="app-mps" data-ng-controller="student-subject">
+    <div class="loader text-danger" data-ng-show="wait">Loading...</div>
+    <div class="col-md-4" style="border-right:1px solid #CCC">
+        <div id="tableContainer">
+        <table class="table table-responsive table-striped table-hover">
+            <tr><td><input class="form-control" placeholder="Search" data-ng-model="searchtext" data-ng-change="changed()" id="searchText" /></td></tr>
+            @*<tr><td>{{searchtext}}</td></tr>*@
+            <tr data-ng-repeat="s in SubjectList">
+                <td style="text-align:center;cursor:pointer" data-ng-click="getSubject(s.id,s.academicEntityName,s.academicEntityType,s.academicEntityValueType,s.academicEntityGrade,s.active)">
+                    <div class="row">
+                        <div class="col-xs-1" ><i ng-class="getActiveClass(s.active)"></i></div>
+                        <div class="col-xs-10">{{s.academicEntityName }}</div>
+                    </div>
+                </td>
+            </tr>
+        </table>
+        </div>
+    </div>
+    <div class="col-md-8" style="padding-top:48px">
+        <form name="frmSubject" ng-submit="updateSubject()" novalidate>
+            <div class="row">
+                <div class="col-md-3">
+                    <input ng-model="subject.id" type="hidden" />
+                </div>
+                <div class="col-md-4">
+                    <label>Is Active</label> 
+                    <input type="checkbox" data-ng-model="subject.active" class="checkbox-inline" id="isActive" ng-disabled="subject.id.length==0">
+                </div>
+                <div class="col-md-8">
+                    <label>Subject Name</label>
+                    <input name="subjectName" id="subjectName" ng-model="subject.academicEntityName" class="form-control" required/>
+                    <span ng-show="frmSubject.subjectName.$error.required && frmSubject.subjectName.$dirty " class="text-danger">Name is required.</span>
+                </div>
+                <div class="col-md-8">
+                    <label>Subject type</label>
+                    <select asp-for="TypeList" data-ng-model="subject.academicEntityType" asp-items="Html.GetEnumSelectList<AcademicEntityType>()" class="form-control" required data-ng-change="changeTypeDropDown()">
+                        <option selected="" disabled="" value="" class="ng-binding">Type of subject...</option>
+                    </select>
+                    <span ng-show="frmSubject.TypeList.$error.required" class="text-danger">Subject type is required.</span>
+                </div>
+                <div class="col-md-8">
+                    <label>Value type</label>
+                     <select asp-for="ValueList" data-ng-model="subject.academicEntityValueType"  asp-items="Html.GetEnumSelectList<AcademicEntityValueType>()" class="form-control" required>
+                        <option selected="" disabled="" value="" class="ng-binding">Type of value...</option>
+                    </select>
+                    <span ng-show="frmSubject.ValueList.$error.required" class="text-danger">Value type is required.</span>
+                </div>
+                <div class="col-md-8">
+                    <label>For grade</label>
+                    <select ng-model="subject.academicEntityGrade" id="grades" name="grades" class="form-control" required>
+                        <option value="" disabled="" selected="" class="ng-binding">Select grades...</option>
+                        <option value="1-12">1-12</option>
+                        <option value="1-6">1-6</option>
+                        <option value="7-12">7-12</option>
+                    </select>
+                    <span ng-show="frmSubject.grades.$error.required" class="text-danger">grade is required.</span>
+                </div>
+                <div class="row">
+                    <div class="col-md-5 text-right" style="padding-top: 14px;">
+                        <span ng-show="subject.id" ng-click="clearSubjectForm()" class="btn btn-sm btn-warning">clear</span>    
+                    </div>   
+                    <div class="col-md-5 text-right">
+                        <button type="submit" class="btn btn-primary btn-lg" ng-disabled="frmSubject.$invalid">{{ subjectButtonText }}</button>
+                    </div> 
+                </div>
+                
+            </div>
+        </form>
+    </div>
+</div>
+</div>
+@section scripts{
+    <script src="~/lib/angular/angular.min.js"></script>
+    <environment include="Development">
+        <script src="~/js/student-subject.js"></script>
+    </environment>
+    <environment exclude="Development">
+        <script src="~/minjs/student-subject.js"></script>
+    </environment>
+}

@@ -1,0 +1,447 @@
+﻿@{
+    ViewBag.Title = "Edit Student";
+}
+<div class="container">
+<div class="row well well-sm text-center">
+    <h3>@ViewBag.Title</h3>
+</div>
+<div class="row" data-ng-app="app-mps" data-ng-controller="student-edit">
+    <div class="loader text-danger" data-ng-show="wait">{{loaderMsg}}</div>
+    <div class="col-md-4" style="border-right:1px solid #CCC">
+        <div id="tableContainer">
+        <table class="table table-responsive table-striped table-hover">
+            <tr><td>
+                <div class="row">
+                    <div class="col-xs-9">
+                        <input class="form-control" placeholder="Search" data-ng-model="searchtext" data-ng-change="changed()" id="searchText" />
+                    </div>
+                    <div class="col-xs-3 ">
+                        <div class="checkbox-inline text-left"><input type="checkbox" id="chkActive" checked data-ng-click="changeListActive()"/>Active</div>
+                    </div>
+                </div>
+            </td></tr>
+            <tr data-ng-repeat="s in StudentList">
+                <td style="text-align:center;cursor:pointer" data-ng-click="getStudent(s.studentId)">
+                    <div class="row">
+                        <!-- {{ s.studentName.split('-')[0] }} -->
+                        <div class="col-md-1"><i ng-class="getActiveClass(s.studentName.split('-')[0])"></i></div>
+                        <div class="col-xs-5 text-left" style="margin-left:-11px">{{ s.studentName.split('-')[1] }}</div>
+                        <div class="col-xs-2 text-left">{{ s.studentName.split('-')[2] }}</div>
+                        <div class="col-xs-4 text-center">{{ s.studentName.split('-')[3]+ s.studentName.split('-')[4] }}</div>
+                    </div>
+                </td>
+            </tr>
+        </table>
+        </div>
+    </div>
+    <div class="col-md-8" data-ng-show="student.studentId">
+         <form class="form-horizontal"  ng-submit="updateStudent()" name="frmEditStudent" novalidate>
+                <div class="panel-group">
+                    <div class="panel panel-default">
+                        <div class="panel-body row">
+                            <div class="col-md-12">
+                                <div class="row">
+                                    <input ng-model="student.studentId" type="hidden"/>
+                                    <div class="col-md-4 text-center">
+                                        <label>Is Active</label> 
+                                        <input type="checkbox" data-ng-model="student.isActive" class="checkbox-inline" id="isActive">
+                                    </div>
+                                    <div class="col-md-4">
+                                        <label>Roll Number</label> 
+                                        <input data-ng-model="student.rollNumber" class="form-control" readonly>
+                                    </div>
+                                    <div class="col-xs-4">
+                                        <img src="~/images/personPlaceholder.jpg" alt="Student picture" style="border: 1px solid #CCC;"  id="picImg"/>
+                                        <input type="file" id="filePic" name="filePic" style="display:none" accept="image/*"/>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="row">
+                                    
+                                    <div class="col-xs-10">
+                                        <label>FirstName</label><font color=red>*</font>
+                                        <input data-ng-model="student.firstName" class="form-control" name="firstName"  required/>
+                                        <span ng-show="frmEditStudent.firstName.$error.required" class="text-danger">First name is required.</span>
+                                    </div>
+                                    <div class="col-xs-10">
+                                        <label>MiddleName</label>
+                                        <input data-ng-model="student.middleName" Class = "form-control" name="middleName" id="middleName" />
+                                        
+                                    </div>
+                                    <div class="col-xs-10">
+                                        <label>LastName</label><font color=red>*</font>
+                                        <input data-ng-model="student.lastName" class = "form-control" name="lastName" id="lastName" required />
+                                        <span ng-show="frmEditStudent.lastName.$error.required" class="text-danger">Last name is required.</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="row">
+                                    <div class="col-md-10">
+                                        <label>Gender</label>
+                                        <select id="cmbGender" name="cmbGender" data-ng-model="student.gender" class = "form-control">
+                                            <option value="Male">Male</option>
+                                            <option value="Female">Female</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-md-10">
+                                        <label>DOB</label><font color=red>*</font>
+                                        <input data-ng-model="student.dob" name="dob" id="dob" class = "form-control datepicker" required readonly/>
+                                        <span ng-show="frmEditStudent.dob.$error.required" class="text-danger">Birth date is required.</span>
+                                    </div>
+                                    <div class="col-md-10"><font color=red>*</font>
+                                        <label>AdmissionDate</label>
+                                        <input data-ng-model="student.admissionDate" name="admissionDate" id="admissionDate" class = "form-control datepicker" required readonly/>
+                                        <span ng-show="frmEditStudent.admissionDate.$error.required" class="text-danger">Admission date is required.</span>
+                                    </div>
+                                </div>
+                            </div>
+                             <div class="col-md-6">
+                                <div class="row">
+                                    <div class="col-md-10">
+                                        <label>Aadhaar Number</label><font color=red>*</font><span class="small">&nbsp;12 digit aadhaar no.</span>
+                                        <input data-ng-model="student.aadhaarNumber" name="aadhaarNumber" id="aadhaarNumber" class = "form-control"  required maxlength="12"/>
+                                        <span ng-show="frmEditStudent.aadhaarNumber.$error.required && frmEditStudent.aadhaarNumber.$dirty" class="text-danger">Aadhaar Number is required.</span>
+                                    </div>
+                                    <div class="col-md-10" style="padding-top:24px">
+                                        <label>Transfer Certificate</label><span class="small">&nbsp;(TC from previous school)</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="row" style="padding-top:16px">
+                                    <div class="col-md-10">
+                                        <img src="/images/img-icon.png" title="attach aadhaar card copy" id="aadhaarPic" style="max-height:47px"/>
+                                        <input type="file" id="aadhaarCard" name="aadhaarCard" style="display:none" accept="image/*"/>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="row" style="padding-top:16px">
+                                    <div class="col-md-10">
+                                        <img src="/images/img-icon.png" title="attach TC copy" id="transferCertPic" style="max-height:47px"/>
+                                        <input type="file" id="transferCert" name="transferCert" style="display:none" accept="image/*"/>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="panel panel-default">
+                        <div class="panel-body row">
+                            <div class="col-md-10">
+                                <label>Father's Name</label><font color=red>*</font>
+                                <input data-ng-model="student.fatherName" class="form-control" id="fatherName" name="fatherName" required />
+                                <span ng-show="frmEditStudent.fatherName.$error.required && frmEditStudent.fatherName.$dirty" class="text-danger">Father's name is required.</span>
+                            </div>
+                            <div class="col-md-6">
+                                <label>Aadhaar Number of Father</label><font color=red>*</font><span class="small">&nbsp;12 digit aadhaar no.</span>
+                                <input data-ng-model="student.fatherAadhaarNumber" name="fatherAadhaarNumber" id="fatherAadhaarNumber" class = "form-control"  required maxlength="12"/>
+                                <span ng-show="frmEditStudent.fatherAadhaarNumber.$error.required && frmEditStudent.fatherAadhaarNumber.$dirty" class="text-danger">Aadhaar Number is required.</span>
+                            </div>
+                            <div class="col-md-6" style="padding-top:16px">
+                                <img src="/images/img-icon.png" title="attach aadhaar card copy" id="fatherAadhaarPic" style="max-height:47px"/>
+                                <input type="file" id="fatherAadhaarCard" name="fatherAadhaarCard" style="display:none" accept="image/*"/>
+                            </div>
+                            <div class="col-md-10">
+                                <label>Mother's Name</label><font color=red>*</font>
+                                <input data-ng-model="student.motherName" class="form-control" id="motherName" name="motherName" required />
+                                <span ng-show="frmEditStudent.motherName.$error.required && frmEditStudent.motherName.$dirty" class="text-danger">Mother's name is required.</span>
+                            </div>
+                            <div class="col-md-6">
+                                <label>Aadhaar Number of Mother</label><font color=red>*</font><span class="small">&nbsp;12 digit aadhaar no.</span>
+                                <input data-ng-model="student.motherAadhaarNumber" name="motherAadhaarNumber" id="motherAadhaarNumber" class = "form-control"  required maxlength="12"/>
+                                <span ng-show="frmEditStudent.motherAadhaarNumber.$error.required && frmEditStudent.motherAadhaarNumber.$dirty" class="text-danger">Aadhaar Number is required.</span>
+                            </div>
+                            <div class="col-md-6" style="padding-top:16px">
+                                <img src="/images/img-icon.png" title="attach aadhaar card copy" id="motherAadhaarPic" style="max-height:47px"/>
+                                <input type="file" id="motherAadhaarCard" name="motherAadhaarCard" style="display:none" accept="image/*"/>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="panel panel-default">
+                        <div class="panel-body ">
+                            <div class="row" ng-show="student.slabName">
+                                <div class="col-md-offset-1 col-md-6 col-md-offset-5 text-info">
+                                    Displaying slab defined for academic year <b>{{ student.currentAcademicYear }}</b>
+                                </div>
+                            </div>
+                            <div class="row" ng-hide="student.slabName">
+                                <div class="col-md-offset-1 col-md-10 col-md-offset-1 text-danger">
+                                    Slab is not defined for academic year {{ student.currentAcademicYear }} <br/> Please set a payment slab for this year from <a href="~/Expense/Student?id={{student.studentId}}">Expense&gt;&gt;Student</a>
+                                </div>
+                            </div>
+                            <div class="row" >
+                                <div class="col-md-4" ng-disabled="{{student.slabName}}">
+                                    <label>Slab</label>
+                                    <select name="cmbSlabs" ng-model="student.slabName" class="form-control" ng-change="getFees()" required >
+                                        <option value="" disabled="" selected="" class="ng-binding">Select slab type</option>
+                                        <option ng-repeat="slab in slabs" ng-value="slab.id">{{slab.name}}</option>
+                                    </select>
+                                    <span ng-show="frmEditStudent.cmbSlabs.$error.required" class="text-danger">slab is required.</span>
+                                </div>
+                                <div class="col-md-4">
+                                    <label>Grade</label>
+                                    <select name="cmbGrade" ng-model="student.grade" class="form-control" ng-change="getFees()" required>
+                                        <option value="" disabled="" selected="" class="ng-binding">Select grade</option>
+                                        <option ng-repeat="grade in grades" ng-value="grade.id">{{grade.name}}</option>
+                                    </select>
+                                    <span ng-show="frmEditStudent.cmbGrade.$error.required" class="text-danger">grade is required.</span>
+                                </div>
+                                <div class="col-md-4">
+                                    <label>Fees</label>
+                                    <!-- <select name="cmbFee" ng-model="student.totalFee" class="form-control">
+                                        <option ng-repeat="fee in totalfees" ng-value="fee.id">{{fee.name}}</option>
+                                    </select> -->
+                                    <input id="txtFee" name="txtFee" data-ng-model="student.totalFee" class = "form-control" readonly/>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="panel panel-default">
+                        <div class="panel-body row">
+                            <div class="col-md-4">
+                                <label>Email</label><font color=red>*</font>
+                                <input data-ng-model="student.email" name="email" id="email" class = "form-control" type="email" required/>
+                                <span ng-show="frmEditStudent.email.$error.required" class="text-danger">Email is required.</span>
+                                <span ng-show="frmEditStudent.email.$error.email" class="text-danger">Email format is incorrect</span>
+                            </div>
+                            <div class="col-md-4">
+                                <label>UserName</label>
+                                <input data-ng-model="student.userName"class = "form-control"  readonly/>
+                            </div>
+                            <div class="col-md-4">
+                                
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-xs-4">
+                        <label>PhoneNumber</label><font color=red>*</font>
+                        <input data-ng-model="student.phoneNumber" name="phoneNumber" id="phoneNumber" class = "form-control" required/>
+                        <span ng-show="frmEditStudent.address1.$error.required" class="text-danger">Phone no. is required.</span>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-xs-8">
+                        <label>Address1</label><font color=red>*</font>
+                        <textarea data-ng-model="student.address1" name="address1" class = "form-control" required></textarea>
+                        <span ng-show="frmEditStudent.address1.$error.required" class="text-danger">The address1 is required.</span>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-xs-8">
+                        <label>Address2</label>
+                        <textarea data-ng-model="student.address2" class = "form-control"></textarea>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-xs-9" style="text-align:right">
+                        <button class="btn btn-primary btn-lg" ng-disabled="frmEditStudent.$invalid || wait">Update</button>
+                    </div>
+                </div>
+            </form>
+        <div class="row" ng-hide="student">
+            <div class="col-md-12">
+                &lt;&lt;Select a student
+            </div>
+        </div>
+    </div>
+    <div class="col-md-8" data-ng-hide="student.studentId" style="padding-top:48px">
+        <h4>&lt;&lt;Select a student</h4>
+    </div>
+</div>
+ </div>
+@section scripts{
+    <script src="~/lib/angular/angular.min.js"></script>
+    <environment include="Development">
+        <script src="~/js/admin-student.js"></script>
+        <script src="~/js/bootstrap-datepicker.js"></script>  
+        <script src="~/js/jquery.numeric.js"></script>
+    </environment>
+    <environment exclude="Development">
+        <script src="~/minjs/admin-student.js"></script>
+        <script src="~/minjs/bootstrap-datepicker.js"></script>    
+        <script src="~/minjs/jquery.numeric.js"></script>
+    </environment>
+    <link rel="stylesheet" href="/css/datepicker.css" />
+    <script>
+        $(document).ready(function () {
+            
+            $('.datepicker').datepicker({
+                format: 'dd-mm-yyyy',
+            });
+            $('.datepicker').on('click',function(){
+                $('.datepicker').data({date: $(this).val()});
+            });
+            $('#aadhaarNumber').numeric();
+            $('#fatherAadhaarNumber').numeric();
+            $('#motherAadhaarNumber').numeric();
+            $('#phoneNumber').numeric();
+             function changechk() {
+                if ($('#isActive').is(':checked')) {
+                    $('#isActive').attr('style', 'background-color:green;outline:5px solid green');
+                }
+                else {
+                    $('#isActive').attr('style', 'background-color:yellow;outline:5px solid yellow');
+                }
+
+            }
+            $('#isActive').on('change', function () {
+                changechk();
+            });
+            $('#picImg').click(function(){
+                $('#filePic').trigger('click');
+            });
+            $('#filePic').bind('change', function() {
+               var f = this.files[0];
+                if(f){
+                    if(f.type.indexOf('image')==-1){
+                        alert('please upload only images \n files of type GIF, PNG, JPEG, BMP\nare supported')
+                        return false;
+                    }
+                    var s = formatBytes(f.size);
+                    if(Number(s.split(' ')[0])>1.3 && s.split(' ')[1] == 'MB'){
+                        alert('The image file cannot be more that\n1 MB, please crop the image to 150px X 150px\n this will reduce the size, and try re-uploading');
+                        return false;
+                    }
+                    else{
+                        readURL(this);
+                    }
+                }
+                else
+                {
+                    return false;
+                }
+            });
+            $('#aadhaarPic').click(function(){
+                $('#aadhaarCard').trigger('click');
+            });
+            $('#aadhaarCard').bind('change',function(){
+                var f = this.files[0];
+                if(f){
+                    if(f.type.indexOf('image')==-1){
+                        alert('please upload only images \n files of type GIF, PNG, JPEG, BMP\nare supported')
+                        return false;
+                    }
+                    var s = formatBytes(f.size);
+                    if(Number(s.split(' ')[0])>1.3 && s.split(' ')[1] == 'MB'){
+                        alert('The image file cannot be more that\n1 MB, please crop the image to 150px X 150px\n this will reduce the size, and try re-uploading');
+                        return false;
+                    }
+                    else{
+                        readAadhaar(this,'aadhaarPic');
+                    }
+                }
+                else
+                {
+                    return false;
+                }
+            });
+            $('#fatherAadhaarPic').click(function(){
+                $('#fatherAadhaarCard').trigger('click');
+            });
+            $('#fatherAadhaarCard').bind('change',function(){
+                var f = this.files[0];
+                if(f){
+                    if(f.type.indexOf('image')==-1){
+                        alert('please upload only images \n files of type GIF, PNG, JPEG, BMP\nare supported')
+                        return false;
+                    }
+                    var s = formatBytes(f.size);
+                    if(Number(s.split(' ')[0])>1.3 && s.split(' ')[1] == 'MB'){
+                        alert('The image file cannot be more that\n1 MB, please crop the image to 150px X 150px\n this will reduce the size, and try re-uploading');
+                        return false;
+                    }
+                    else{
+                        readAadhaar(this,'fatherAadhaarPic');
+                    }
+                }
+                else
+                {
+                    return false;
+                }
+            });
+            $('#motherAadhaarPic').click(function(){
+                $('#motherAadhaarCard').trigger('click');
+            });
+            $('#motherAadhaarCard').bind('change',function(){
+                var f = this.files[0];
+                if(f){
+                    if(f.type.indexOf('image')==-1){
+                        alert('please upload only images \n files of type GIF, PNG, JPEG, BMP\nare supported')
+                        return false;
+                    }
+                    var s = formatBytes(f.size);
+                    if(Number(s.split(' ')[0])>1.3 && s.split(' ')[1] == 'MB'){
+                        alert('The image file cannot be more that\n1 MB, please crop the image to 150px X 150px\n this will reduce the size, and try re-uploading');
+                        return false;
+                    }
+                    else{
+                        readAadhaar(this,'motherAadhaarPic');
+                    }
+                }
+                else
+                {
+                    return false;
+                }
+            });
+            $('#transferCertPic').click(function(){
+                $('#transferCert').trigger('click');
+            });
+            $('#transferCert').bind('change',function(){
+                var f = this.files[0];
+                if(f){
+                    if(f.type.indexOf('image')==-1){
+                        alert('please upload only images \n files of type GIF, PNG, JPEG, BMP\nare supported')
+                        return false;
+                    }
+                    var s = formatBytes(f.size);
+                    if(Number(s.split(' ')[0])>1.3 && s.split(' ')[1] == 'MB'){
+                        alert('The image file cannot be more that\n1 MB, please crop the image to 150px X 150px\n this will reduce the size, and try re-uploading');
+                        return false;
+                    }
+                    else{
+                        readAadhaar(this,'transferCertPic');
+                    }
+                }
+                else
+                {
+                    return false;
+                }
+            });
+        });
+        function readURL(input) {
+            if (input.files && input.files[0]) {
+                var reader = new FileReader();
+
+                reader.onload = function (e) {
+                        $('#picImg').attr('src', e.target.result);
+                        $('#picImg').attr('style','width: 150px; max-height: 150px;');
+                    }
+
+                reader.readAsDataURL(input.files[0]);
+            }
+        }
+        function readAadhaar(input, p) {
+            if (input.files && input.files[0]) {
+                var reader = new FileReader();
+
+                reader.onload = function (e) {
+                        $('#'+p).attr('src', e.target.result);
+                    }
+
+                reader.readAsDataURL(input.files[0]);
+            }
+        }
+        function formatBytes(bytes,decimals) {
+            if(bytes == 0) return '0 Bytes';
+            var k = 1024,
+            dm = decimals || 2,
+            sizes = ['Bytes', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB'],
+            i = Math.floor(Math.log(bytes) / Math.log(k));
+            return parseFloat((bytes / Math.pow(k, i)).toFixed(dm)) + ' ' + sizes[i];
+        }
+    </script>
+}

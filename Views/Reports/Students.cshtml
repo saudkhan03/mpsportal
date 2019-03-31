@@ -1,0 +1,89 @@
+@{
+    ViewBag.Title = "Student report";
+}
+<div class="container">
+<div class="row well well-sm text-center">
+    <h3>@ViewBag.Title</h3>
+</div>
+<div class="row">
+    <div class="col-md-12 text-right">
+        <button class="btn btn-default"><i class="fa fa-file-excel-o"></i>&nbsp;Export</button>
+    </div>
+    <div class="col-xs-12">
+        <table id="grid"></table>
+        <div id="pager"></div>
+    </div>
+</div>
+@section scripts{
+    <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/cupertino/jquery-ui.css" />
+    <link rel="stylesheet" href="~/css/ui.jqgrid.min.css" />
+    <script src="~/js/jquery.jqgrid.min.js"></script>
+    <script>
+    $(document).ready(function () {
+        var u = '/Reports/LoadStudents';
+        $("#grid").jqGrid({
+            //datatype: "local",
+            //data: myData,
+            url: u,
+            datatype: "json",
+            colNames: ['StudentId','active','AdmissionDate','FirstName ', 'MiddleName', 'LastName', 'Grade', 'Address1', 'Phone', 'DateOfBirth', 'Email', 'UserName', 'SlabName', 'TotalFees', 'AcademicYear', 'CreatedBy'],
+            //colNames: ['id', 'Email', 'First Name', 'Last Name', 'Phone', 'Veri E', 'Veri P'],
+            colModel: [
+                       { name: 'studentId', index: 'studentId', hidden:true, align: 'center'},
+                       { name: 'isActive', index: 'isActive', width: 40, align: 'center',formatter: 'checkbox',edittype: 'checkbox', editoptions: {value: 'True:False', defaultValue: 'True',stype: "select", searchoptions: { sopt: ["eq", "ne"], value: ":Any;1:Yes;0:No" }}},
+                       { name: 'admissionDate', index: 'admissionDate', width: 60, align: 'center', sorttype: 'date', formatter: 'date', formatoptions: {newformat: 'd-M-Y'}, datefmt: 'd-M-Y'},
+                       { name: 'firstName', index: 'firstName', width: 40, align: 'center'},
+                       { name: 'middleName', index: 'middleName', width: 40 , align: 'center'},
+                       { name: 'lastName', index: 'lastName', width: 40, align: 'center' },
+                       { name: 'grade', index: 'grade', width: 40, align: 'center' },
+                       { name: 'address1', index: 'address1', width: 100, align: 'center' },
+                       { name: 'phone', index: 'phone', width: 40, align: 'center' },
+                       { name: 'dob', index: 'dob', width: 60, format:'date', align: 'center', sorttype: 'date', formatter: 'date', formatoptions: {newformat: 'd-M-Y'}, datefmt: 'd-M-Y'},
+                       { name: 'email', index: 'email', width: 60, align: 'center' },
+                       { name: 'userName', index: 'userName', width: 60, align: 'center' },
+                       { name: 'slabName', index: 'slabName', width: 60, align: 'center' },
+                       { name: 'totalFees', index: 'totalFees', width: 40, align: 'center' },
+                       { name: 'academicYear', index: 'academicYear', width: 50, align: 'center' },
+                       { name: 'studentCreatedBy', index: 'studentCreatedBy', width: 50, align: 'center' }],
+                      
+            cmTemplate: { resizable: false },
+            loadonce: true,
+            rowNum: 300,
+            rowList: [50, 70, 90],
+            pager: '#pager',
+            sortname: 'FirstName',
+            viewrecords: true,
+            sortorder: "asc",
+            width:1024,
+            cmTemplate: { resizable: true },
+            //ondblClickRow: function (rowId) {
+            //    var rowData = jQuery(this).getRowData(rowId);
+            //    var id = rowData['userId'];
+            //    showAccount(id);
+            //},
+            loadComplete: function (data) {
+                var  x = data;
+            }
+        });
+
+        var mygrid = jQuery('#grid'),
+        cDiv = mygrid[0].grid.cDiv;
+        mygrid.setCaption("");
+        $("a.ui-jqgrid-titlebar-close", cDiv).unbind();
+        $(cDiv).hide();
+        $("#grid").jqGrid('navGrid', '#pager', { edit: false, add: false, del: false });
+        $("#grid").jqGrid('filterToolbar', { stringResult: true, searchOnEnter: false, defaultSearch: "cn" });
+
+        $(".btn").on("click", function(){
+            var allRowsInGrid = $('#grid').jqGrid('getGridParam','data');
+            $('.loader').show();
+            $.post('/Reports/ExportStudents',{T:'Students', data:allRowsInGrid},function(result){
+                $('.loader').hide();
+                if(result){
+                    window.location.href=result;
+                }
+            });
+        });
+    });
+</script>
+}

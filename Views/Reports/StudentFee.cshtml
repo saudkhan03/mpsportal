@@ -1,0 +1,126 @@
+@{
+    ViewBag.Title = "Student fees report";
+}
+<div class="container">
+<div class="row well well-sm text-center">
+    <h3>@ViewBag.Title</h3>
+</div>
+<div class="row">
+    <div class="col-md-12 text-right">
+        <button class="btn btn-default"><i class="fa fa-file-excel-o"></i>&nbsp;Export</button>
+    </div>
+    <div class="col-xs-12">
+        <table id="grid"></table>
+        <div id="pager"></div>
+    </div>
+</div>
+@section scripts{
+    <link rel="stylesheet" href="~/css/jquery-ui.css" />
+    <link rel="stylesheet" href="~/css/ui.jqgrid.min.css" />
+    <script src="~/js/jquery.jqgrid.min.js"></script>
+    <script>
+    $(document).ready(function () {
+        var u = '/Reports/LoadStudentFee';
+        $("#grid").jqGrid({
+            //datatype: "local",
+            //data: myData,
+            url: u,
+            datatype: "json",
+            colNames: ['StudentSlabId','active','Name','RollNumber', 'Grade', 'SlabName','AcademicYear','FeesStartDate','FeesEndDate','Fees','TotalFees','ExpenseAmount','PaidFees'],
+            colModel: [
+                       { name: 'studentSlabId', index: 'studentSlabId', hidden:true, align: 'center'},
+                       { name: 'isActive', index: 'isActive', width: 40, align: 'center',formatter: 'checkbox',edittype: 'checkbox', editoptions: {value: 'true:false', defaultValue: 'true'}},
+                       { name: 'name', index: 'name', width: 40, align: 'center' },
+                       { name: 'rollNumber', index: 'rollNumber', width: 40, align: 'center' },
+                       { name: 'grade', index: 'grade', width: 40, align: 'center' },
+                       { name: 'slabName', index: 'slabName', width: 60, align: 'center' },
+                       { name: 'academicYear', index: 'academicYear', width: 40, align: 'center' },
+                       { name: 'feesStartDate', index: 'feesStartDate', width: 40, align: 'center' , sorttype: 'date', formatter: 'date', formatoptions: {newformat: 'd-M-Y'}, datefmt: 'd-M-Y'},
+                       { name: 'feesEndDate', index: 'feesEndDate', width: 40, align: 'center' , sorttype: 'date', formatter: 'date', formatoptions: {newformat: 'd-M-Y'}, datefmt: 'd-M-Y'},
+                       { name: 'fees', index: 'fees', width: 40, align: 'center' },
+                       { name: 'totalFees', index: 'totalFees', width: 40, align: 'center' },
+                    //    { name: 'paidFees', index: 'paidFees', width: 40, align: 'center' },
+                    //    { name: 'paidDate', index: 'paidDate', width: 40, align: 'center' , sorttype: 'date', formatter: 'date', formatoptions: {newformat: 'd-M-Y'}, datefmt: 'd-M-Y'},
+                       { name: 'expenseAmount', index: 'expenseAmount', width: 40, align: 'center' },
+                       { name: 'paidFees', index: 'paidFees', width: 40, align: 'center' },
+                    ],                      
+            cmTemplate: { resizable: false },
+            loadonce: true,
+            rowNum: 300,
+            rowList: [50, 70, 90],
+            pager: '#pager',
+            sortname: 'Name',
+            viewrecords: true,
+            sortorder: "asc",
+            width:1024,
+            cmTemplate: { resizable: true },
+            subGrid: true,
+            subGridRowExpanded: function (subgridDivId, rowId) {
+                if($('#'+subgridDivId).html().indexOf('row')==-1){
+                    var subgridTableId1 = subgridDivId + "_fee";
+                    var subgridTableId2 = subgridDivId + "_exp";
+                    $("#" + subgridDivId).addClass('row')
+                                    .html('<div class="col-md-offset-1 col-md-5"><table id=' + subgridTableId1 + '></table></div><div class="col-md-5"><table id=' + subgridTableId2 + '></table></div>');
+                    $("#" + subgridTableId1).jqGrid({
+                        url: '/Reports/LoadStudentFeeDetail?studentslabid='+ $("#grid").jqGrid ('getCell', rowId, 'studentSlabId'),
+                        datatype: "json",
+                        colNames: ['PaidFees', 'PaidDate'],
+                        colModel: [
+                            { name: 'paidFees', width: 100 },
+                            { name: 'paidDate', width: 100 , align: 'center' , sorttype: 'date', formatter: 'date', formatoptions: {newformat: 'd-M-Y'}, datefmt: 'd-M-Y'},
+                        ],
+                        sortname: 'Name',
+                        viewrecords: true,
+                        sortorder: "asc",
+                        caption: 'Fees details'
+                    });
+                    $("#" + subgridTableId2).jqGrid({
+                        url: '/Reports/LoadStudentFeeExpenseDetail?studentslabid='+ $("#grid").jqGrid ('getCell', rowId, 'studentSlabId'),
+                        datatype: "json",
+                        colNames: ['ExpenseName','ExpenseAmount', 'ExpenseDate','ExpenseDesc'],
+                        colModel: [
+                            { name: 'expenseName', width: 100 },
+                            { name: 'expenseAmount', width: 100 },
+                            { name: 'expenseDate', width: 100 , align: 'center' , sorttype: 'date', formatter: 'date', formatoptions: {newformat: 'd-M-Y'}, datefmt: 'd-M-Y'},
+                            { name: 'expenseDesc', width: 100 },
+                            
+                        ],
+                        sortname: 'Name',
+                        viewrecords: true,
+                        sortorder: "asc",
+                        caption: 'Expense details'
+                    });
+                }
+            },
+            //ondblClickRow: function (rowId) {
+            //    var rowData = jQuery(this).getRowData(rowId);
+            //    var id = rowData['userId'];
+            //    showAccount(id);
+            //},
+            // loadComplete: function (data) {
+            //     var  x = data;
+            // }
+        });
+
+        var mygrid = jQuery('#grid'),
+        cDiv = mygrid[0].grid.cDiv;
+        mygrid.setCaption("");
+        $("a.ui-jqgrid-titlebar-close", cDiv).unbind();
+        $(cDiv).hide();
+        $("#grid").jqGrid('navGrid', '#pager', { edit: false, add: false, del: false });
+        $("#grid").jqGrid('filterToolbar', { stringResult: true, searchOnEnter: false, defaultSearch: "cn" });
+
+        $(".btn").on("click", function(){
+            var allRowsInGrid = $('#grid').jqGrid('getGridParam','data');
+            $('.loader').show();
+            $.post('/Reports/ExportStudentFees',{T:'StudentFees', data:allRowsInGrid},function(result){
+                $('.loader').hide();
+                if(result){
+                    window.location.href=result;
+                }
+            });
+        });
+    });
+</script>
+    </script>
+}

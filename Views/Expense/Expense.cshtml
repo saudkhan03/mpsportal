@@ -1,0 +1,175 @@
+@{
+    ViewBag.Title = "Add Expense";
+}
+<div class="container">
+<div class="row well well-sm text-center">
+    <h3>@ViewBag.Title</h3>
+</div>
+<div class="row" data-ng-app="app-mps" data-ng-controller="expense-expense" id="expense-expense">
+    <div class="loader text-danger" data-ng-show="wait">Loading...</div>
+    <div class="col-md-4" style="border-right:1px solid #CCC">
+        <div id="tableContainer">
+        <table class="table table-responsive table-striped table-hover">
+            <tr><td><input class="form-control" placeholder="Search" data-ng-model="searchtext" data-ng-change="changed()" id="searchText" /></td></tr>
+            <tr data-ng-repeat="e in ExpenseHeaderList">
+                <td style="text-align:center;cursor:pointer" data-ng-click="getExpense(e.id,e.expenseHeaderName,e.expenseHeaderDesc)">{{ e.expenseHeaderName }}</td>
+            </tr>
+        </table>
+        </div>
+    </div>
+    <div class="col-md-8" style="padding-left: 28px;padding-top:48px" ng-show="expense.expenseId">
+        <form name="frmExpense" ng-submit="addExpense()" novalidate>
+            <div class="row fee">
+                <div>expense:</div>
+                <div class="col-md-offset-1 col-md-10 col-md-offset-1 text-center" >
+                    <h4>{{ expense.expenseId }} : {{ expense.expenseName }}</h4>
+                </div>
+                <!-- <div class="col-md-offset-1 col-md-10 col-md-offset-1 text-center" >
+                    {{ expense.expenseDesc }}
+                </div> -->
+            </div>
+            <div class="row">
+                <div class="col-md-offset-1 col-md-10 col-md-offset-1">
+                    <label>Expense Details</label>
+                    <textarea ng-model="expense.expenseDescription" name="expenseDescription" class="form-control" required></textarea>
+                    <span ng-show="frmExpense.expenseDescription.$error.required && frmExpense.expenseDescription.$dirty" class="text-danger">Expense Details are required.</span>
+                </div>
+                <div class="col-md-offset-1 col-md-10 col-md-offset-1">
+                    <label>Expense Date</label>
+                    <input class="form-control datepicker" ng-model="expense.expenseDate" name="expenseDate" id="expenseDate" required readonly />
+                    <span ng-show="frmExpense.expenseDate.$error.required && frmExpense.expenseDate.$dirty" class="text-danger">Expense date is required.</span>
+                </div>
+                <div class="col-md-offset-1 col-md-10 col-md-offset-1">
+                    <label>Expense Amount</label>
+                    <input class="form-control" ng-model="expense.expenseAmount" name="expenseAmount" id="expenseAmount" required/>
+                    <span ng-show="frmExpense.expenseAmount.$error.required && frmExpense.expenseAmount.$dirty" class="text-danger">Expense amount is required.</span>
+                </div>
+                <div class="col-md-offset-1 col-md-10 col-md-offset-1">
+                    <div class="col-md-4">
+                        <a ng-click="getStudents()" style="cursor: pointer;">Expense is for a student&gt;&gt;:</a>
+                    </div>
+                    <div class="col-md-6">
+                        <!-- <span data-ng-show="{{studentList.length>0}}"> -->
+                        <select name="cmbStudentListForExpense" ng-model="expense.studentSlabLinkedId" class="form-control" >
+                            <option ng-repeat="student in studentList" ng-value="student.studentSlabId">{{student.studentName}}</option>
+                        </select>
+                        <!-- </span> -->
+                    </div>
+                </div>
+                <div class="col-md-offset-1 col-md-10 col-md-offset-1">
+                    <table class="table table-responsive">
+                        <tr>
+                            <td>
+                                <div class="row">
+                                    <div class="col-md-8">
+                                        <label>Add Attachment</label>
+                                        <input type="file" id="expenseAttachment1" name="expenseAttachment1" /> 
+                                    </div>
+                                    <div class="col-md-4" style="padding-top:9px">
+                                        <div id="remove1" class="btn btn-default btn-sm js-remove" tooltip="remove attachment" style="display:none"><i class=" fa fa-trash-o fa-lg"></i></div>
+                                        <span id="fileicon1"></span>
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                        <!--<tr>
+                            <td>
+                                <div class="row">
+                                    <div class="col-md-8">
+                                        <label>Add Attachment</label>
+                                        <input type="file" id="expenseAttachment2" name="expenseAttachment2" disabled/> 
+                                    </div>
+                                    <div class="col-md-4" style="padding-top:9px">
+                                        <div id="remove2" class="btn btn-default btn-sm js-remove" tooltip="remove attachment" style="display:none"><i class=" fa fa-trash-o fa-lg"></i></div>
+                                        <span id="fileicon2"></span>
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                         <tr>
+                            <td>
+                                <div class="row">
+                                    <div class="col-md-8">
+                                        <label>Add Attachment</label>
+                                        <input type="file" id="expenseAttachment3" name="expenseAttachment3" disabled/> 
+                                    </div>
+                                    <div class="col-md-4" style="padding-top:9px">
+                                        <div id="remove3" class="btn btn-default btn-sm js-remove" tooltip="remove attachment" style="display:none"><i class=" fa fa-trash-o fa-lg"></i></div>
+                                        <span id="fileicon3"></span>
+                                    </div>
+                                </div>
+                            </td>
+                        </tr> -->
+                    </table>
+                    
+                </div>
+                <div class="col-md-offset-1 col-md-10 col-md-offset-1 text-right">
+                    <button type="submit" class="btn btn-primary btn-lg" ng-disabled="frmExpense.$invalid || wait">Add expense</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+@section scripts{
+    <script src="~/lib/angular/angular.min.js"></script>
+    <environment include="Development">
+        <script src="~/js/expense-expense.js"></script>
+        <script src="/js/jquery.numeric.js"></script>
+        <script src="~/js/bootstrap-datepicker.js"></script>
+    </environment>
+    <environment exclude="Development">
+        <script src="~/minjs/expense-expense.js"></script>
+        <script src="/minjs/jquery.numeric.js"></script>
+        <script src="~/minjs/bootstrap-datepicker.js"></script>
+    </environment>
+    <link rel="stylesheet" href="/css/datepicker.css" />
+    <script>
+        $(document).ready(function () {
+            $('#expenseAmount').numeric({ decimalPlaces: 2 , negative: false });
+            $('#expenseAttachment1').val('');
+            $('.datepicker').datepicker({
+                format: 'dd-mm-yyyy',
+            }).on('changeDate', function (ev) {
+                var $scope = angular.element($('[data-ng-controller="expense-expense"]')).scope();
+                $scope.expense.expenseDate= $('#expenseDate').val();
+            });
+            $('#expenseAttachment1').on('change',function(){
+               //console.log($('#expenseAttachment1').val().split('.')[1]);
+               //var fileType = $('#expenseAttachment1').val().split('.')[1];
+               //puticon($('#fileicon1'),fileType);
+               if($('#expenseAttachment1').val().length>0){
+                    $('#remove1').show();
+                    //$('#expenseAttachment2').removeAttr('disabled');
+                }
+                else{
+                    $('#remove1').hide();
+                    //$('#expenseAttachment2').attr('disabled');
+                }
+            });
+            // $('#expenseAttachment2').val('');
+            // $('#expenseAttachment2').on('change',function(){
+            //    if($('#expenseAttachment2').val().length>0){
+            //         $('#remove2').show();
+            //         $('#expenseAttachment3').removeAttr('disabled');
+            //     }
+            //     else
+            //         $('#remove2').hide();
+            //         $('#expenseAttachment3').attr('disabled');
+            // });
+            // $('#expenseAttachment3').val('');
+            // $('#expenseAttachment3').on('change',function(){
+            //    if($('#expenseAttachment3').val().length>0){
+            //         $('#remove3').show();
+            //     }
+            //     else
+            //         $('#remove3').hide();
+            // });
+            $('.js-remove').click(function(){
+                $('#expenseAttachment'+this.id.replace('remove','')).val('');
+                //$('#expenseAttachment'+this.id.replace('remove','')).attr('disabled');
+                $(this).hide();
+            });
+            
+        });
+    </script>
+}

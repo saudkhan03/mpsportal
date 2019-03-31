@@ -1,0 +1,74 @@
+@{
+    ViewBag.Title = "Add/Edit Student Salbs";
+}
+<div class="container">
+<div class="row well well-sm text-center">
+    <h3>@ViewBag.Title</h3>
+</div>
+<div class="row" data-ng-app="app-mps" data-ng-controller="admin-slabs">
+    <div class="loader text-danger" data-ng-show="wait" >Loading...</div>
+    <div class="col-md-4" style="border-right:1px solid #CCC">
+        <div id="tableContainer">
+        <table class="table table-responsive table-striped table-hover">
+            <tr><td><input class="form-control" placeholder="Search" data-ng-model="searchtext" data-ng-change="changed()" id="searchText" /></td></tr>
+            @*<tr><td>{{searchtext}}</td></tr>*@
+            <tr data-ng-repeat="s in SlabList">
+                <td style="text-align:center;cursor:pointer" data-ng-click="getSlab(s.slabId)">{{ s.slabName }}</td>
+            </tr>
+        </table>
+        </div>
+    </div>
+    <div class="col-md-8" style="padding-top:48px">
+        <form name="frmSlabs" ng-submit="updateSlab()" novalidate>
+            <div class="row">
+                <div class="col-md-8">
+                    <input ng-model="slab.slabId" type="hidden" />
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-8">
+                    <label>Slab Name</label>
+                    <input ng-model="slab.slabName" class="form-control" required name="slabName" readonly/>
+                    <span ng-show="frmSlabs.slabName.$error.required && frmSlabs.slabName.$dirty " class="text-danger">Name is required.</span>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-8">
+                    <label>Class / Grade</label>
+                    <input ng-model="slab.grade" class="form-control" required name="grade" readonly/>
+                    <span ng-show="frmSlabs.grade.$error.required && frmSlabs.grade.$dirty " class="text-danger">grade is required.</span>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-8">
+                    <label>Fees</label>
+                    <input ng-model="slab.totalFee" class="form-control" required name="totalFee" id="totalFee"/>
+                    <span ng-show="frmSlabs.totalFee.$error.required && frmSlabs.totalFee.$dirty " class="text-danger">fees is required.</span>
+                </div>
+            </div>
+             <div class="row">
+                <div class="col-md-10 text-right">
+                    <button class="btn btn-lg btn-primary" type="submit" ng-disabled="frmSlabs.$invalid || wait">Update Slab</button>
+                </div>
+            </div>  
+        </form>
+    </div>
+</div>
+@section scripts{
+    <script src="~/lib/angular/angular.min.js"></script>
+    <environment include="Development">
+        <script src="~/js/admin-slabs.js"></script>
+        <script src="/js/jquery.numeric.js"></script>
+        <script src="/js/jquery.slimscroll.js"></script>
+    </environment>
+    <environment exclude="Development">
+        <script src="~/minjs/admin-slabs.js"></script>
+        <script src="/minjs/jquery.numeric.js"></script>
+        <script src="/minjs/jquery.slimscroll.js"></script>
+    </environment>
+    <script>
+        $(document).ready(function () {
+            $('#totalFee').numeric({ decimalPlaces: 2, negative: false });
+        });
+    </script>
+}

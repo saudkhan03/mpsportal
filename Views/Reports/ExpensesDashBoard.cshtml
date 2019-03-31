@@ -1,0 +1,91 @@
+@{
+    ViewBag.Title = "Expense Dashboard";
+}
+<div class="container">
+    <div class="row well well-sm text-center">
+        <h3>@ViewBag.Title</h3>
+    </div>
+    <div class="row">
+        <div class="col-md-6">
+            <div class="panel panel-default">
+                <div class="panel-heading">Yearly Expenses for <select id='years'></select></div>
+                <div class="panel-body">
+                    <div id="ExpenseYearlyChart" class="center-block">
+                        <canvas id="CanExpenseYearlyChart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="panel panel-default">
+                <div class="panel-heading">Monthly Expenses for
+                    <select id="months">
+                        <option value="1">January</option>
+                        <option value="2">February</option>
+                        <option value="3">March</option>
+                        <option value="4">April</option>
+                        <option value="5">May</option>
+                        <option value="6">June</option>
+                        <option value="7">July</option>
+                        <option value="8">August</option>
+                        <option value="9">September</option>
+                        <option value="10">October</option>
+                        <option value="11">November</option>
+                        <option value="12">December</option>
+                    </select>
+                </div>
+                <div class="panel-body">
+                    <div id="ExpenseMonthlyChart" class="center-block">
+                        <canvas id="CanExpenseMonthlyChart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-6">
+            <div class="panel panel-default">
+                <div class="panel-heading">Consolidated chart <select id='yearsConsolidated'></select></div>
+                <div class="panel-body">
+                    <div id="ConsolidatedChart" class="center-block">
+                        <canvas id="CanConsolidatedChart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="panel panel-default">
+                <div class="panel-heading">Consolidated monthly chart for
+                    <select id="monthsConsolidated">
+                        <option value="1">January</option>
+                        <option value="2">February</option>
+                        <option value="3">March</option>
+                        <option value="4">April</option>
+                        <option value="5">May</option>
+                        <option value="6">June</option>
+                        <option value="7">July</option>
+                        <option value="8">August</option>
+                        <option value="9">September</option>
+                        <option value="10">October</option>
+                        <option value="11">November</option>
+                        <option value="12">December</option>
+                    </select>
+                </div>
+                <div class="panel-body">
+                    <div id="ConsolidatedMonthlyChart" class="center-block">
+                        <canvas id="CanConsolidatedMonthlyChart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+@section scripts{
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.2/Chart.bundle.js"></script>
+<environment include="Development">
+    <script src="~/js/jquery.expenseDashBoard.js"></script>
+</environment>
+<environment exclude="Development">
+    <script src="~/minjs/jquery.expenseDashBoard.js"></script>
+</environment>
+}

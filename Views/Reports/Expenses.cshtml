@@ -1,0 +1,71 @@
+@{
+    ViewBag.Title = "Expense report";
+}
+<div class="container">
+<div class="row well well-sm text-center">
+    <h3>@ViewBag.Title</h3>
+</div>
+<div class="row">
+    <div class="col-md-12 text-right">
+        <button class="btn btn-default"><i class="fa fa-file-excel-o"></i>&nbsp;Export</button>
+    </div>
+    <div class="col-xs-12">
+        <table id="grid"></table>
+        <div id="pager"></div>
+    </div>
+</div>
+@section scripts{
+    <link rel="stylesheet" href="~/css/jquery-ui.css" />
+    <link rel="stylesheet" href="~/css/ui.jqgrid.min.css" />
+    <script src="~/js/jquery.jqgrid.min.js"></script>
+    <script>
+    $(function () {
+            'use strict';
+            var u = '/Reports/LoadExpenses',
+            $grid = $("#grid");
+            $grid.jqGrid({
+                url: u,
+                datatype: "json",
+                // datatype: 'local',
+                // data: mydata,
+                colNames: ['ExpenseId','ExpenseName','ExpenseDescription','ExpenseDate','ExpenseLinkedTo'],
+                //colNames: ['id', 'Email', 'First Name', 'Last Name', 'Phone', 'Veri E', 'Veri P'],
+                colModel: [
+                        { name: 'expenseId', index: 'expenseId', hidden:true, align: 'center'},
+                        { name: 'expenseName', index: 'expenseName', width: 40, align: 'center'},
+                        { name: 'expenseDescription', index: 'expenseDescription', width: 40, align: 'center'},
+                        { name: 'expenseDate', index: 'expenseDate', width: 60, align: 'center', sorttype: 'date', formatter: 'date', formatoptions: {newformat: 'd-M-Y'}, datefmt: 'd-M-Y'},
+                        { name: 'expenseLinkedTo', index: 'expenseLinkedTo', width: 40, align: 'center'},
+                        ],
+                rowNum: 300,
+                rowList: [5, 10, 20],
+                pager: '#pager',
+                gridview: true,
+                loadonce: true,
+                rownumbers: true,
+                sortname: 'expenseDate',
+                 width:1024,
+                viewrecords: true,
+                sortorder: 'desc',
+               // caption: 'Buttons in the column headers',
+                height: '100%',
+                loadComplete: function (data) {
+                    var  x = data;
+                }
+            }).jqGrid('navGrid', '#pager', { edit: false, add: false, del: false }).jqGrid('filterToolbar', { stringResult: true, searchOnEnter: false, defaultSearch: "cn" });
+        // $("#grid").jqGrid('navGrid', '#pager', { edit: false, add: false, del: false });
+        // $("#grid").jqGrid('filterToolbar', { stringResult: true, searchOnEnter: false, defaultSearch: "cn" });
+        //$('.ui-search-clear').hide();
+        $(".btn").on("click", function(){
+            var allRowsInGrid = $('#grid').jqGrid('getGridParam','data');
+            $('.loader').show();
+            $.post('/Reports/ExportExpenses',{T:'Expense', data:allRowsInGrid},function(result){
+                $('.loader').hide();
+                if(result){
+                    window.location.href=result;
+                }
+            });
+        });
+    });
+</script>
+}

@@ -1,0 +1,93 @@
+@{
+    ViewBag.Title = "Add/Edit Deductions";
+}
+<div class="container">
+<div class="row well well-sm text-center">
+    <h3>@ViewBag.Title</h3>
+</div>
+<div class="row" data-ng-app="app-mps" data-ng-controller="admin-deductions">
+    <div class="loader text-danger" data-ng-show="wait" >Loading...</div>
+    <div class="col-md-4" style="border-right:1px solid #CCC">
+        <div id="tableContainer">
+        <table class="table table-responsive table-striped table-hover">
+            <tr><td><input class="form-control" placeholder="Search" data-ng-model="searchtext" data-ng-change="changed()" id="searchText" /></td></tr>
+            @*<tr><td>{{searchtext}}</td></tr>*@
+            <tr data-ng-repeat="d in DeductionList">
+                <td style="text-align:center;cursor:pointer" data-ng-click="getDeduction(d.deductionId)">{{ d.name }}</td>
+            </tr>
+        </table>
+        </div>
+    </div>
+    <div class="col-md-8" style="padding-top:48px">
+        <form name="frmDeductions" ng-submit="addDeduction()" novalidate>
+            <div class="row">
+                <div class="col-md-8">
+                    <input ng-model="deduction.id" type="hidden" />
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-10">
+                <div class="col-md-4">
+                    <label>Deduction Name</label>
+                    <input ng-model="deduction.deductionName" class="form-control" required name="deductionName" />
+                    <span ng-show="frmDeductions.deductionName.$error.required && frmDeductions.deductionName.$dirty " class="text-danger">Name is required.</span>
+                </div>
+                <div class="col-md-6">
+                    <label>Description</label>
+                    <textarea ng-model="deduction.deductionDesc" class="form-control" name="deductionDesc"  rows=3></textarea>
+                </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-10">
+                <div class="col-md-6">
+                    <label>Type of deduction (Rs or %)</label>
+                    <select data-ng-model="deduction.deductionType" class="form-control" required name="deductionType"  >
+                        <option value="Rs"> Rs (Amount)</option>
+                        <option value="%"> % (Percentage)</option>
+                    </select>
+                </div>
+                </div>
+            </div>
+            <div class="row">
+
+                <div class="col-md-10">
+                <div class="col-md-6">
+                    <label>Value</label>
+                    <input data-ng-model="deduction.deductionValue" name="deductionValue" id="deductionValue" class="form-control" required/>
+                    <span ng-show="frmDeductions.deductionValue.$error.required && frmDeductions.deductionValue.$dirty " class="text-danger">Value is required.</span>
+                </div>
+                </div>
+            </div>
+            <div class="row">
+               <div class="col-md-5 text-right" style="padding-top: 14px;">
+                        <span ng-show="deduction.id" ng-click="clearDeductionForm()" class="btn btn-sm btn-warning">clear</span>    
+                </div>
+                <!-- <div class="col-md-2 text-right" style="padding-top: 14px;">
+                        <span ng-show="deduction.id" ng-click="deleteDeduction()" class="btn btn-sm btn-danger">delete</span>    
+                </div>    -->
+                <div class="col-md-5 text-right">
+                    <button class="btn btn-lg btn-primary" type="submit" ng-disabled="frmDeductions.$invalid || wait">{{deductionButtonText}}</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+@section scripts{
+    <script src="~/lib/angular/angular.min.js"></script>
+    <environment exclude="Development">
+        <script src="~/minjs/admin-deductions.js"></script>
+        <script src="/minjs/jquery.numeric.js"></script>
+        <script src="/minjs/jquery.slimscroll.js"></script>
+    </environment>
+    <environment include="Development">
+        <script src="~/js/admin-deductions.js"></script>
+        <script src="/js/jquery.numeric.js"></script>
+        <script src="/js/jquery.slimscroll.js"></script>
+    </environment>
+    <script>
+        $(document).ready(function () {
+            $('#deductionValue').numeric({ decimalPlaces: 2, negative: false });
+        });
+    </script>
+}
